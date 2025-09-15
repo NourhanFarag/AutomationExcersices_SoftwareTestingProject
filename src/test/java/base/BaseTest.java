@@ -11,8 +11,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
-    protected WebDriver driver;
-    protected SeleniumHelper helper;
+    public WebDriver driver;
+    public SeleniumHelper helper;
     private static final String BASE_URL = "https://automationexercise.com";
 
     @BeforeMethod (alwaysRun = true)
