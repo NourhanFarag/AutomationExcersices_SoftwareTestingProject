@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Jane Doe",
+    "email": "jane.doe@test.com",
+    "subject": "Support Request",
+    "message": "Having trouble with my account",
+    "filePath": "src/test/resources/files/sample.txt"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Mrs",
+    "name": "Nourhan",
+    "email": "nourhan_test@example.com",
+    "password": "Pass123",
+    "dobDay": "17",
+    "dobMonth": "March",
+    "dobYear": "2002",
+    "firstName": "Nourhan",
+    "lastName": "Farag",
+    "company": "ShoubraTech",
+    "address1": "123 Main St",
+    "address2": "Suite 45",
+    "country": "Canada",
+    "state": "Ontario",
+    "city": "Toronto",
+    "zipcode": "17916",
+    "mobileNumber": "1234567890"
+  }
+]

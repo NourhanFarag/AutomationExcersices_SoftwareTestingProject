@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="AutomationExercise Test Suite" verbose="1" parallel="false">
+
+    
+    <test name="RegisterThenLogin">
+        <classes>
+            <class name="tests.LoginUser_TC2"/>
+        </classes>
+    </test>
+
+</suite>
