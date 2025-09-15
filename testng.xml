@@ -1,10 +1,16 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="AutomationExercise Test Suite" verbose="1" parallel="false">
 
-    
-    <test name="RegisterThenLogin">
+    <test name="AutomationExerciseTests">
         <classes>
+            <!-- Test Case 1: Register User -->
+            <class name="tests.RegisterUser_TC1"/>
+
+            <!-- Test Case 2: Login with correct credentials -->
             <class name="tests.LoginUser_TC2"/>
+
+            <!-- Test Case 3: Login with incorrect credentials -->
+            <class name="tests.LoginUserInvalid_TC3"/>
         </classes>
     </test>
 
