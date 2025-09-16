@@ -36,8 +36,10 @@ public class LoadingData {
 
     // Login User
     public static class LoginUser {
+        public String name;
         public String loginEmail;
         public String loginPassword;
+        
     }
     
     public static class InvalidLoginUser {

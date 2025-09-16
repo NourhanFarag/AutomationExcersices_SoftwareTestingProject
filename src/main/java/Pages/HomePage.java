@@ -17,7 +17,9 @@ public class HomePage {
     private final By loggedInUsername = By.xpath("//li[a[contains(text(),'Logged in as')]]/a/b");
     private final By deleteAccountBtn = By.xpath("//a[contains(text(),'Delete Account')]");
     private final By loggedInAsText = By.xpath("//li[a[contains(normalize-space(.),'Logged in as')]]");
+    private final By logoutBtn = By.xpath("//a[contains(text(),'Logout')]");
 
+    
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
         this.helper = helper;
@@ -52,5 +54,9 @@ public class HomePage {
     public AccountDeletedPage clickDeleteAccount() {
         helper.click(deleteAccountBtn);
         return new AccountDeletedPage(driver, helper);
+    }
+    
+    public void clickLogout() {
+        helper.click(logoutBtn);
     }
 }

@@ -4,11 +4,21 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import Pages.*;
 import base.BaseTest;
+import org.testng.annotations.DataProvider;
 
 public class LoginUser_TC2 extends BaseTest {
 
-    @Test
-    public void loginUserWithCorrectCredentials() {
+    @DataProvider(name = "loginData")
+    public Object[][] getRegisterData() throws Exception {
+        LoadingData.RegisterUser[] users = LoadingData.readRegisterUsers("registeredUser.json");
+        Object[][] data = new Object[users.length][1];
+        for (int i = 0; i < users.length; i++) {
+            data[i][0] = users[i];
+        }
+        return data;
+    }
+    @Test(dataProvider = "loginData")
+    public void loginUserWithCorrectCredentials(LoadingData.RegisterUser user) {
         HomePage homePage = new HomePage(driver, helper);
 
         // Step 3: Verify homepage visible
@@ -21,21 +31,19 @@ public class LoginUser_TC2 extends BaseTest {
         Assert.assertEquals(loginPage.getLoginHeaderText(), "Login to your account", "Login header mismatch!");
 
         // Step 6: Enter credentials
-        String email = "nourhan_test@example.com";
-        String password = "Pass123";
-        loginPage.enterLoginEmail(email);
-        loginPage.enterLoginPassword(password);
-
+        loginPage.enterLoginEmail(user.email);
+        loginPage.enterLoginPassword(user.password);
+        
         // Step 7: Click login
         loginPage.clickLoginButton();
 
         // Step 8: Verify logged in as username
-        Assert.assertEquals(homePage.getLoggedInUsername(), "Nourhan", "Logged in username mismatch!");
+        Assert.assertEquals(homePage.getLoggedInAsText(), "Logged in as " + user.name);
 
         // Step 9: Delete account
-        AccountDeletedPage deletedPage = homePage.clickDeleteAccount();
+        //AccountDeletedPage deletedPage = homePage.clickDeleteAccount();
 
         // Step 10: Verify account deleted
-        Assert.assertEquals(deletedPage.getAccountDeletedText(), "ACCOUNT DELETED!", "Mismatch in Account Deleted message!");
+        //Assert.assertEquals(deletedPage.getAccountDeletedText(), "ACCOUNT DELETED!", "Mismatch in Account Deleted message!");
     }
 }

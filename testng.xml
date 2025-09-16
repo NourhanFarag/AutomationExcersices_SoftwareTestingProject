@@ -11,6 +11,9 @@
 
             <!-- Test Case 3: Login with incorrect credentials -->
             <class name="tests.LoginUserInvalid_TC3"/>
+            
+            <!-- Test Case 4: Logout User -->
+            <class name="tests.LogoutUser_TC4"/>
         </classes>
     </test>
 

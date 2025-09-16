@@ -17,7 +17,13 @@ public class LoginPage {
     private final By loginEmailField = By.xpath("//input[@data-qa='login-email']");
     private final By loginPasswordField = By.cssSelector("input[data-qa='login-password']");
     private final By loginButton = By.cssSelector("button[data-qa='login-button']");
-    private final By loginErrorMessage = By.xpath("//p[@style='color: red;']"); // locator for login error
+    private final By loginErrorMessage = By.xpath("//p[@style='color: red;']");
+
+    private final By newUserSignupHeader = By.xpath("//h2[text()='New User Signup!']");
+    private final By signupNameField = By.name("name");
+    private final By signupEmailField = By.xpath("//input[@data-qa='signup-email']");
+    private final By signupButton = By.xpath("//button[@data-qa='signup-button']");
+    private final By signupError = By.xpath("//p[text()='Email Address already exist!']");
 
     public LoginPage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -53,5 +59,25 @@ public class LoginPage {
     
     public String getLoginErrorMessage() {
         return helper.getText(loginErrorMessage).trim();
+    }
+    
+    public String getNewUserSignupHeaderText() {
+        return helper.getText(newUserSignupHeader).trim();
+    }
+
+    public void enterSignupName(String name) {
+        helper.sendKeys(signupNameField, name);
+    }
+
+    public void enterSignupEmail(String email) {
+        helper.sendKeys(signupEmailField, email);
+    }
+
+    public void clickSignupButton() {
+        helper.click(signupButton);
+    }
+
+    public String getSignupErrorText() {
+        return helper.getText(signupError).trim();
     }
 }
