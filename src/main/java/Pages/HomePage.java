@@ -18,7 +18,10 @@ public class HomePage {
     private final By deleteAccountBtn = By.xpath("//a[contains(text(),'Delete Account')]");
     private final By loggedInAsText = By.xpath("//li[a[contains(normalize-space(.),'Logged in as')]]");
     private final By logoutBtn = By.xpath("//a[contains(text(),'Logout')]");
-
+    private final By contactUsButton = By.xpath("//a[contains(text(),'Contact us')]");
+    private final By homeButton = By.xpath("//a[@class='btn btn-success']");
+    private final By testCasesButton = By.cssSelector("a[href='/test_cases']");
+    private final By testCasesHeader = By.cssSelector(".title.text-center");
     
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -59,5 +62,21 @@ public class HomePage {
     public LoginPage clickLogout() {
         helper.click(logoutBtn);
         return new LoginPage(driver, helper);
+    }
+    
+    public void clickContactUs() {
+        driver.findElement(contactUsButton).click();
+    }
+
+    public void clickHomeButton() {
+        driver.findElement(homeButton).click();
+    }
+    
+    public void clickTestCases() {
+        helper.click(testCasesButton);
+    }
+    
+    public boolean isTestCasesPageVisible() {
+        return helper.isElementDisplayed(testCasesHeader);
     }
 }

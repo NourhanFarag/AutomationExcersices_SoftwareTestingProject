@@ -18,6 +18,16 @@
             
             <!-- Test Case 4: Logout User -->
             <class name="tests.LogoutUser_TC4"/>
+            
+            <!-- Test Case 5: Register User with existing email -->
+            <class name="tests.RegisterUserExistingEmail_TC5"/>
+            
+            <!-- Test Case 6: Contact Us Form -->
+            <class name="tests.ContactUs_TC6"/>
+            
+            <!-- Test Case 7: Verify Test Case Page -->
+            <class name="tests.TestCases_TC7"/>
+            
         </classes>
     </test>
 

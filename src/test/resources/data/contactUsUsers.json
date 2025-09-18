@@ -1,9 +1,9 @@
 [
   {
-    "name": "Jane Doe",
-    "email": "jane.doe@test.com",
-    "subject": "Support Request",
-    "message": "Having trouble with my account",
-    "filePath": "src/test/resources/files/sample.txt"
+    "contactUsFormName": "Nourhan Farag",
+    "contactUsFormEmail": "nourhan@example.com",
+    "contactUsFormSubject": "Automation Inquiry",
+    "contactUsFormMsg": "This is a test message from automation framework.",
+    "contactUsFormFilePath": "D:\\Software Testing\\AutomoationExcersices_TestingProject\\src\\test\\resources\\data\\sampleImage.jpg"
   }
 ]

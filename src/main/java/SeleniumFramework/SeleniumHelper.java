@@ -124,6 +124,9 @@ public class SeleniumHelper {
             return "";
         }
     }
+    public WebElement getElement(By locator) {
+        return waitForVisibility(locator, DEFAULT_TIMEOUT);
+    }
 
     // Moves the mouse over an element (useful for menus, hover actions)
     public void hoverOver(By locator) {
