@@ -5,7 +5,7 @@ import base.BaseTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import tests.LoadingData.InvalidLoginUser;
+import tests.LoadingData.LoginUser;
 
 /**
  *
@@ -15,7 +15,7 @@ public class LoginUserInvalid_TC3 extends BaseTest{
 
     @DataProvider(name = "invalidLoginData")
     public Object[][] getInvalidLoginData() throws Exception {
-        InvalidLoginUser[] users = LoadingData.readInvalidLoginUsers("invalidLoginUsers.json");
+        LoginUser[] users = LoadingData.readLoginUsers("invalidLoginUser.json");
         Object[][] data = new Object[users.length][1];
         for (int i = 0; i < users.length; i++) {
             data[i][0] = users[i];
@@ -24,7 +24,7 @@ public class LoginUserInvalid_TC3 extends BaseTest{
     }
     
     @Test(dataProvider = "invalidLoginData")
-    public void lologinUserWithIncorrectCredentials(InvalidLoginUser user) {
+    public void lologinUserWithIncorrectCredentials(LoginUser user) {
         SoftAssert softAssert = new SoftAssert();
         
         //3. Verify that home page is visible successfully

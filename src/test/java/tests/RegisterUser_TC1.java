@@ -25,7 +25,7 @@ public class RegisterUser_TC1 extends BaseTest {
     @Test(dataProvider = "registerData")
     public void testRegisterUser(LoadingData.RegisterUser user) {
         SoftAssert softAssert = new SoftAssert();
-        System.out.println("Registering user: " + user.email);
+        System.out.println("Registering user: " + user.signUpEmail);
 
         // Step 3: Verify Home Page
         HomePage home = new HomePage(driver, helper);
@@ -35,7 +35,7 @@ public class RegisterUser_TC1 extends BaseTest {
         LoginPage loginPage = home.clickSignupLogin();
         softAssert.assertEquals(loginPage.getNewUserSignupText(), "New User Signup!");
 
-        RegisterPage registerPage = loginPage.enterSignupDetails(user.name, user.email);
+        RegisterPage registerPage = loginPage.enterSignupDetails(user.signUpName, user.signUpEmail);
         softAssert.assertEquals(registerPage.getEnterAccountInfoText(), "ENTER ACCOUNT INFORMATION");
 
         // Step 9-12: Fill Account Info
@@ -53,7 +53,7 @@ public class RegisterUser_TC1 extends BaseTest {
         softAssert.assertEquals(accountCreatedPage.getAccountCreatedText(), "ACCOUNT CREATED!");
 
         home = accountCreatedPage.clickContinue();
-        softAssert.assertEquals(home.getLoggedInAsText(), "Logged in as " + user.name);
+        softAssert.assertEquals(home.getLoggedInAsText(), "Logged in as " + user.signUpName);
 
         // Step 17-18: Delete Account
         AccountDeletedPage deletedPage = home.clickDeleteAccount();

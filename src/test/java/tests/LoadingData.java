@@ -1,8 +1,8 @@
 package tests;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -15,9 +15,9 @@ public class LoadingData {
     
     // Registration User
     public static class RegisterUser {
+        public String signUpName;
+        public String signUpEmail;
         public String title;
-        public String name;
-        public String email;
         public String password;
         public String dobDay;
         public String dobMonth;
@@ -36,15 +36,34 @@ public class LoadingData {
 
     // Login User
     public static class LoginUser {
-        public String name;
         public String loginEmail;
         public String loginPassword;
         
     }
     
-    public static class InvalidLoginUser {
-        public String loginEmail;
-        public String loginPassword;
+    // contact us form submissions
+    public static class ContactUsUsers {
+        public String contactUsFormName;
+        public String contactUsFormEmail;
+        public String contactUsFormSubject;
+        public String contactUsFormMsg;
+        public String contactUsFormFilePath;
+    }
+
+    // payment details
+    public static class PaymentData {
+        public String nameOnCard;
+        public String cardNumber;
+        public String cvc;
+        public String expiryMonth;
+        public String expiryYear;
+    }
+
+    // product reviews
+    public static class ReviewsData {
+        public String reviewerName;
+        public String reviewerEmail;
+        public String reviewText;
     }
 
     public static String readFromFile(String fileName, String key) throws FileNotFoundException {
@@ -65,9 +84,21 @@ public class LoadingData {
         return ListOfCredentials;
     }
     
-    public static InvalidLoginUser[] readInvalidLoginUsers(String fileName) throws FileNotFoundException {
+    public static ContactUsUsers[] readContactUsForms(String fileName) throws FileNotFoundException {
         FileReader reader = new FileReader(TEST_DATA_PATH + fileName);
-        InvalidLoginUser[] ListOfCredentials = new Gson().fromJson(reader, InvalidLoginUser[].class);
+        ContactUsUsers[] ListOfCredentials = new Gson().fromJson(reader, ContactUsUsers[].class);
+        return ListOfCredentials;
+    }
+    
+    public static PaymentData[] readpaymentData(String fileName) throws FileNotFoundException {
+        FileReader reader = new FileReader(TEST_DATA_PATH + fileName);
+        PaymentData[] ListOfCredentials = new Gson().fromJson(reader, PaymentData[].class);
+        return ListOfCredentials;
+    }
+    
+    public static ReviewsData[] readReviewData(String fileName) throws FileNotFoundException {
+        FileReader reader = new FileReader(TEST_DATA_PATH + fileName);
+        ReviewsData[] ListOfCredentials = new Gson().fromJson(reader, ReviewsData[].class);
         return ListOfCredentials;
     }
 }

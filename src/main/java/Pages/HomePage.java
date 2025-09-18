@@ -56,7 +56,8 @@ public class HomePage {
         return new AccountDeletedPage(driver, helper);
     }
     
-    public void clickLogout() {
+    public LoginPage clickLogout() {
         helper.click(logoutBtn);
+        return new LoginPage(driver, helper);
     }
 }

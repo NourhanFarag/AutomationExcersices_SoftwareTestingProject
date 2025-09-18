@@ -15,7 +15,7 @@ public class RegisterUserExistingEmail_TC5 extends BaseTest {
 
     @DataProvider(name = "existingUserData")
     public Object[][] getExistingUserData() throws Exception {
-        LoadingData.RegisterUser[] users = LoadingData.readRegisterUsers("registeredUser.json");
+        LoadingData.LoginUser[] users = LoadingData.readLoginUsers("validLoginUser.json");
         Object[][] data = new Object[users.length][1];
         for (int i = 0; i < users.length; i++) {
             data[i][0] = users[i];
@@ -24,7 +24,7 @@ public class RegisterUserExistingEmail_TC5 extends BaseTest {
     }
 
     @Test(dataProvider = "existingUserData")
-    public void registerUserWithExistingEmail(LoadingData.RegisterUser user) {
+    public void registerUserWithExistingEmail(LoadingData.LoginUser user) {
         SoftAssert softAssert = new SoftAssert();
 
         // Step 3: Verify home page
@@ -39,8 +39,8 @@ public class RegisterUserExistingEmail_TC5 extends BaseTest {
                 "New User Signup!", "Signup header mismatch!");
 
         // Step 6: Enter name + already registered email
-        loginPage.enterSignupName(user.name);
-        loginPage.enterSignupEmail(user.email);
+        loginPage.enterSignupName("Nourhan");
+        loginPage.enterSignupEmail(user.loginEmail);
 
         // Step 7: Click 'Signup'
         loginPage.clickSignupButton();

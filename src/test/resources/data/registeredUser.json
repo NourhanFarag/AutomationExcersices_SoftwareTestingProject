@@ -1,9 +1,10 @@
 [
   {
+    "signUpName": "Nourhan",
+    "signUpEmail": "nourhantest@example.com",
     "title": "Mrs",
     "name": "Nourhan",
-    "email": "nourhan_test@example.com",
-    "password": "Pass123",
+    "password": "Pass12345",
     "dobDay": "17",
     "dobMonth": "March",
     "dobYear": "2002",
