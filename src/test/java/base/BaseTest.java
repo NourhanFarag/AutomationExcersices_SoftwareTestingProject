@@ -10,6 +10,11 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+/**
+ *
+ * @author Nourhan Farag
+ */
+
 public class BaseTest {
     public WebDriver driver;
     public SeleniumHelper helper;
