@@ -22,6 +22,12 @@ public class HomePage {
     private final By homeButton = By.xpath("//a[@class='btn btn-success']");
     private final By testCasesButton = By.cssSelector("a[href='/test_cases']");
     private final By testCasesHeader = By.cssSelector(".title.text-center");
+    private final By productsButton = By.xpath("//a[contains(text(),'Products')]");
+    private final By subscriptionText = By.xpath("//h2[contains(text(),'Subscription')]");
+    private final By subscriptionEmailInput = By.id("susbscribe_email");
+    private final By subscriptionArrowBtn = By.id("subscribe");
+    private final By successMessage = By.xpath("//div[contains(text(),'You have been successfully subscribed!')]");
+
     
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -78,5 +84,27 @@ public class HomePage {
     
     public boolean isTestCasesPageVisible() {
         return helper.isElementDisplayed(testCasesHeader);
+    }
+    
+    public ProductsPage clickProducts() {
+        helper.click(productsButton);
+        return new ProductsPage(driver, helper);
+    }
+    
+    public void scrollToFooter() {
+        helper.scrollIntoView(subscriptionText);
+    }
+
+    public String getSubscriptionText() {
+        return helper.getText(subscriptionText);
+    }
+
+    public void subscribeWithEmail(String email) {
+        helper.sendKeys(subscriptionEmailInput, email);
+        helper.safeClick(subscriptionArrowBtn);
+    }
+
+    public String getSubscriptionSuccessMessage() {
+        return helper.getText(successMessage);
     }
 }
