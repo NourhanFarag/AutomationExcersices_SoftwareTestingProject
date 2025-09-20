@@ -61,8 +61,8 @@ public class LoginBeforeCheckout_TC16 extends BaseTest{
         checkoutPage.enterComment("Please deliver between 9AM-5PM");
         PaymentPage paymentPage = checkoutPage.clickPlaceOrder();
 
-        // Step 14: Enter payment details (hardcoded for now, can also be moved to JSON later)
-        paymentPage.enterPaymentDetails("Nourhan F", "4111111111111111", "123", "12", "2026");
+        // Step 14: Enter payment details
+        paymentPage.enterPaymentDetails("Nourhan Farag", "57186825581", "123", "12", "2026");
 
         // Step 15: Pay & Confirm Order
         OrderConfirmationPage orderConfirmationPage = paymentPage.clickPayAndConfirm();

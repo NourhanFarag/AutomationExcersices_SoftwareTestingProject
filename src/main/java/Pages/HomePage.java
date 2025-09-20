@@ -29,7 +29,12 @@ public class HomePage {
     private final By successMessage = By.xpath("//div[contains(text(),'You have been successfully subscribed!')]");
     private final By cartButton = By.xpath("//a[contains(text(),'Cart')]");
     private final By firstProductViewBtn = By.xpath("(//a[contains(text(),'View Product')])[1]");
-    
+    private final By recommendedSection = By.xpath("//h2[contains(text(),'recommended items')]");
+    private final By firstRecommendedAddToCartBtn = By.xpath("(//div[@id='recommended-item-carousel']//a[contains(text(),'Add to cart')])[1]");
+    private final By viewCartBtnRecommended = By.xpath("//u[contains(text(),'View Cart')]");
+    private final By scrollUpArrow = By.id("scrollUp"); // adjust locator if different
+    private final By topText = By.xpath("//h2[contains(text(),'Full-Fledged practice website for Automation Engineers')]");
+
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
         this.helper = helper;
@@ -115,5 +120,57 @@ public class HomePage {
     
     public void clickFirstViewProduct() {
         helper.safeClick(firstProductViewBtn);
+    }
+    
+    public boolean isCategoriesSidebarVisible() {
+        return helper.isElementDisplayed(By.xpath("//div[@class='left-sidebar']/h2[text()='Category']"));
+    }
+
+    public ProductsPage selectCategory(String mainCategory, String subCategory) {
+        // Expand main category
+        By mainCategoryLocator = By.xpath("//div[@class='panel-group category-products']//a[@href='#" + mainCategory + "']");
+        helper.click(mainCategoryLocator);
+
+        // Click on subcategory inside the expanded div
+        By subCategoryLocator = By.xpath("//div[@id='" + mainCategory + "']//a[normalize-space()='" + subCategory + "']");
+        helper.click(subCategoryLocator);
+
+        return new ProductsPage(driver, helper);
+    }
+    
+    public void scrollToBottom() {
+        helper.scrollToBottom();
+    }
+
+    public boolean isRecommendedSectionVisible() {
+        return helper.isElementDisplayed(recommendedSection);
+    }
+
+    public void addFirstRecommendedProductToCart() {
+        helper.scrollToElement(firstRecommendedAddToCartBtn);
+        helper.safeClick(firstRecommendedAddToCartBtn);
+    }
+
+    public CartPage clickViewCartFromRecommended() {
+        helper.safeClick(viewCartBtnRecommended);
+        return new CartPage(driver, helper);
+    }
+
+    public boolean isSubscriptionSectionVisible() {
+        return helper.isElementDisplayed(subscriptionText);
+    }
+
+    public void clickScrollUpArrow() {
+        helper.click(scrollUpArrow);
+        helper.waitForVisibility(topText, 5);
+    }
+
+    public boolean isTopTextVisible() {
+        return helper.isElementDisplayed(topText);
+    }
+
+    public boolean isPageScrolledUp() {
+        Number scrollTop = (Number) ((JavascriptExecutor) driver).executeScript("return window.pageYOffset;");
+        return scrollTop.longValue() < 100;
     }
 }

@@ -2,8 +2,11 @@ package Pages;
 
 
 import SeleniumFramework.SeleniumHelper;
+import java.util.ArrayList;
+import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 /**
  *
  * @author Nourhan Farag
@@ -31,6 +34,8 @@ public class CartPage {
     private final By reviewOrder = By.xpath("//h2[contains(text(),'Review Your Order')]");
     private final By commentTextarea = By.name("message");
     private final By placeOrderBtn = By.xpath("//a[contains(text(),'Place Order')]");
+    private final By firstRemoveBtn = By.cssSelector("a.cart_quantity_delete");
+    private final By emptyCartMsg = By.xpath("//p[@class='text-center']/b[contains(text(),'Cart is empty!')]");
 
     public CartPage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -111,5 +116,27 @@ public class CartPage {
     public PaymentPage clickPlaceOrder() {
         helper.click(placeOrderBtn);
         return new PaymentPage(driver, helper);
+    }
+    
+    public void removeFirstProduct() {
+        helper.click(firstRemoveBtn);
+    }
+
+    public boolean isCartEmpty() {
+        return helper.isElementDisplayed(emptyCartMsg);
+    }
+    
+    public List<String> getAllCartProductNames() {
+        List<String> cartProducts = new ArrayList<>();
+        List<WebElement> productElements =
+                driver.findElements(By.cssSelector("#cart_info_table .cart_description h4 a"));
+        for (WebElement product : productElements) {
+            cartProducts.add(product.getText().trim());
+        }
+        return cartProducts;
+    }
+    
+    public boolean isAnyProductInCart() {
+        return !driver.findElements(By.cssSelector(".cart_description")).isEmpty();
     }
 }

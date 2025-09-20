@@ -1,16 +1,16 @@
 package Pages;
 
+import SeleniumFramework.SeleniumHelper;
+import org.openqa.selenium.*;
 /**
  *
  * @author Nourhan Farag
  */
-import SeleniumFramework.SeleniumHelper;
-import org.openqa.selenium.*;
-
 public class RegisterPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
-    
+
+    // -------- Locators --------
     private final By accountInfoHeader = By.xpath("//b[text()='Enter Account Information']");
     private final By titleMr = By.id("id_gender1");
     private final By titleMrs = By.id("id_gender2");
@@ -31,29 +31,31 @@ public class RegisterPage {
     private final By zipcodeField = By.id("zipcode");
     private final By mobileNumberField = By.id("mobile_number");
     private final By createAccountBtn = By.xpath("//button[@data-qa='create-account']");
-    
-    
+
+    // -------- Stored Address --------
+    private Address registeredAddress;
+
     public RegisterPage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
         this.helper = helper;
     }
-    
+
     public String getEnterAccountInfoText() {
         return helper.getText(accountInfoHeader).trim();
     }
-    
-    public void selectTitle (String title) {
-        if(title.equalsIgnoreCase("Mr")) {
+
+    public void selectTitle(String title) {
+        if (title.equalsIgnoreCase("Mr")) {
             helper.selectRadioButton(titleMr);
         } else {
             helper.selectRadioButton(titleMrs);
         }
     }
-    
+
     public void enterPass(String password) {
         helper.sendKeys(passwordField, password);
     }
-    
+
     public void selectDOB(String day, String month, String year) {
         helper.selectDropdownByValue(dayDropdown, day);
         helper.selectDropdownByVisibleText(monthDropdown, month);
@@ -67,7 +69,7 @@ public class RegisterPage {
     public void checkSpecialOffers() {
         helper.checkCheckbox(offersCheckbox);
     }
-    
+
     public void enterPersonalDetails(String fname, String lname, String company,
                                      String address1, String address2, String country,
                                      String state, String city, String zipcode, String mobile) {
@@ -87,17 +89,26 @@ public class RegisterPage {
         helper.click(createAccountBtn);
         return new AccountCreatedPage(driver, helper);
     }
-    
+
+    // -------- Combined register method --------
     public AccountCreatedPage registerNewUser(String title, String password,
-                                          String day, String month, String year,
-                                          String fname, String lname, String company,
-                                          String address1, String address2, String country,
-                                          String state, String city, String zipcode, String mobile) {
+                                              String day, String month, String year,
+                                              String fname, String lname, String company,
+                                              String address1, String address2, String country,
+                                              String state, String city, String zipcode, String mobile) {
         selectTitle(title);
         enterPass(password);
         selectDOB(day, month, year);
         enterPersonalDetails(fname, lname, company, address1, address2, country, state, city, zipcode, mobile);
+
+        // Save address for later verification
+        String fullName = title + "."+fname + " " + lname;
+        registeredAddress = new Address(fullName, company, address1, address2, city, state, country, zipcode, mobile);
+
         return clickCreateAccount();
     }
 
+    public Address getRegisteredAddress() {
+        return registeredAddress;
+    }
 }
