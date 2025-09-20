@@ -20,7 +20,6 @@ public class RegisterPage {
     private final By yearDropdown = By.id("years");
     private final By newsletterCheckbox = By.id("newsletter");
     private final By offersCheckbox = By.id("optin");
-
     private final By firstNameField = By.id("first_name");
     private final By lastNameField = By.id("last_name");
     private final By companyField = By.id("company");
@@ -31,9 +30,9 @@ public class RegisterPage {
     private final By cityField = By.id("city");
     private final By zipcodeField = By.id("zipcode");
     private final By mobileNumberField = By.id("mobile_number");
-    
     private final By createAccountBtn = By.xpath("//button[@data-qa='create-account']");
-
+    
+    
     public RegisterPage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
         this.helper = helper;
@@ -88,4 +87,17 @@ public class RegisterPage {
         helper.click(createAccountBtn);
         return new AccountCreatedPage(driver, helper);
     }
+    
+    public AccountCreatedPage registerNewUser(String title, String password,
+                                          String day, String month, String year,
+                                          String fname, String lname, String company,
+                                          String address1, String address2, String country,
+                                          String state, String city, String zipcode, String mobile) {
+        selectTitle(title);
+        enterPass(password);
+        selectDOB(day, month, year);
+        enterPersonalDetails(fname, lname, company, address1, address2, country, state, city, zipcode, mobile);
+        return clickCreateAccount();
+    }
+
 }

@@ -17,6 +17,10 @@ public class ProductDetailPage {
     private final By productAvailability = By.xpath("//div[@class='product-information']/p[b[contains(text(),'Availability')]]");
     private final By productCondition = By.xpath("//div[@class='product-information']/p[b[contains(text(),'Condition')]]");
     private final By productBrand = By.xpath("//div[@class='product-information']/p[b[contains(text(),'Brand')]]");
+    private final By productInfo = By.cssSelector(".product-information");
+    private final By quantityInput = By.id("quantity");
+    private final By addToCartBtn = By.cssSelector("button.btn.btn-default.cart");
+    private final By viewCartBtn = By.xpath("//u[contains(text(),'View Cart')]");
 
     public ProductDetailPage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -47,4 +51,20 @@ public class ProductDetailPage {
         return helper.getText(productBrand); 
     }
 
+    public boolean isProductInfoVisible() {
+        return helper.isElementDisplayed(productInfo);
+    }
+
+    public void setQuantity(String quantity) {
+        helper.sendKeys(quantityInput, quantity);
+    }
+
+    public void clickAddToCart() {
+        helper.click(addToCartBtn);
+    }
+
+    public CartPage clickViewCart() {
+        helper.click(viewCartBtn);
+        return new CartPage(driver, helper);
+    }
 }

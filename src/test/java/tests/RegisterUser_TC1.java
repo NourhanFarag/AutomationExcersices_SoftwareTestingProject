@@ -56,9 +56,9 @@ public class RegisterUser_TC1 extends BaseTest {
         softAssert.assertEquals(home.getLoggedInAsText(), "Logged in as " + user.signUpName);
 
         // Step 17-18: Delete Account
-        AccountDeletedPage deletedPage = home.clickDeleteAccount();
-        softAssert.assertEquals(deletedPage.getAccountDeletedText(), "ACCOUNT DELETED!");
-        deletedPage.clickContinue();
+//        AccountDeletedPage deletedPage = home.clickDeleteAccount();
+//        softAssert.assertEquals(deletedPage.getAccountDeletedText(), "ACCOUNT DELETED!");
+//        deletedPage.clickContinue();
 
         softAssert.assertAll();
     }

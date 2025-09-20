@@ -27,7 +27,8 @@ public class HomePage {
     private final By subscriptionEmailInput = By.id("susbscribe_email");
     private final By subscriptionArrowBtn = By.id("subscribe");
     private final By successMessage = By.xpath("//div[contains(text(),'You have been successfully subscribed!')]");
-
+    private final By cartButton = By.xpath("//a[contains(text(),'Cart')]");
+    private final By firstProductViewBtn = By.xpath("(//a[contains(text(),'View Product')])[1]");
     
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -106,5 +107,13 @@ public class HomePage {
 
     public String getSubscriptionSuccessMessage() {
         return helper.getText(successMessage);
+    }
+    
+    public void clickCart() {
+        helper.click(cartButton);
+    }
+    
+    public void clickFirstViewProduct() {
+        helper.safeClick(firstProductViewBtn);
     }
 }

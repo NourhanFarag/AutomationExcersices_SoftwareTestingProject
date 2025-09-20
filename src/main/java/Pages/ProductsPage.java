@@ -18,6 +18,10 @@ public class ProductsPage {
     private final By searchButton = By.id("submit_search");
     private final By searchedProductsHeader = By.xpath("//h2[contains(text(),'Searched Products')]");
     private final By searchedProductsList = By.cssSelector(".features_items .product-image-wrapper");
+    private final By firstProductAddToCart = By.xpath("(//a[contains(text(),'Add to cart')])[1]");
+    private final By secondProductAddToCart = By.xpath("(//a[contains(text(),'Add to cart')])[3]");
+    private final By continueShoppingBtn = By.cssSelector(".btn.btn-success.close-modal.btn-block");
+    private final By viewCartBtn = By.xpath("//u[contains(text(),'View Cart')]");
 
     public ProductsPage (WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
@@ -58,5 +62,23 @@ public class ProductsPage {
             productNames.add(product.getText());
         }
         return productNames;
+    }
+    
+    public void addFirstProductToCart() {
+        helper.hoverOver(firstProductAddToCart);
+        helper.click(firstProductAddToCart);
+    }
+
+    public void addSecondProductToCart() {
+        helper.hoverOver(secondProductAddToCart);
+        helper.click(secondProductAddToCart);
+    }
+
+    public void clickContinueShopping() {
+        helper.click(continueShoppingBtn);
+    }
+
+    public void clickViewCart() {
+        helper.click(viewCartBtn);
     }
 }

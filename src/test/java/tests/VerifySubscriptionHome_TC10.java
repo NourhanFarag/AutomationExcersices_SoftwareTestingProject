@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
  *
  * @author Nourhan Farag
  */
-public class VerifySubscription_TC10 extends BaseTest{
+public class VerifySubscriptionHome_TC10 extends BaseTest{
     @Test
     public void verifySubscriptionInHomePage() {
         HomePage homePage = new HomePage(driver, helper);
