@@ -66,22 +66,24 @@ Each test case is implemented as a **separate TestNG class** using page methods 
 ---
 
 ## 4. Project Structure
+````
 AutomationExercises_SoftwareTestingProject/
 │
 ├─ src/
-│ ├─ main/
-│ │ └─ java/
-│ │   ├─ Pages/             # Page classes for POM
-│ │   └─ SeleniumFramework/ # Helper utilities
-│ │
-│ └─ test/
-│   └─ java/
-│     └─ tests/             # TestNG test classes (TC1-TC20)
+│  ├─ main/
+│  │  ├─ java/
+│  │  │  ├─ Pages/              # Page Object classes
+│  │  │  └─ SeleniumFramework/  # Helper utilities
+│  │
+│  └─ test/
+│     └─ java/
+│        └─ tests/              # TestNG test classes
 │
-├─ testData/                 # JSON files for login, registration, contact forms
-├─ pom.xml                   # Maven project file
-├─ testng.xml                # TestNG suite configuration
-└─ README.md                 # Project description and instructions
+├─ testData/                     # JSON test data files
+├─ pom.xml                        # Maven dependencies
+├─ testng.xml                     # TestNG suite configuration
+└─ README.md                      # Project documentation
+```
 
 
 - **Pages/**: Contains all page objects with locators and methods.  
@@ -114,4 +116,5 @@ This will launch a browser showing the detailed test execution report.
 
 ---
 **Author:** Nourhan Farag
+
 **Project Type:** Selenium Automation FrameWork with Java, TestNG, and Allure Reports
