@@ -1,21 +1,22 @@
 package tests;
 
-
 import Pages.*;
 import base.BaseTest;
-import org.testng.asserts.SoftAssert;
-import org.testng.annotations.Test;
-
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+import io.qameta.allure.Step;
+import tests.LoadingData.ContactUsUsers;
+
 /**
- *
+ * 
  * @author Nourhan Farag
- */
-public class ContactUs_TC6 extends BaseTest{
-    
+*/
+public class ContactUs_TC6 extends BaseTest {
+
     @DataProvider(name = "contactUsData")
     public Object[][] getContactUsData() throws Exception {
-        LoadingData.ContactUsUsers[] users = LoadingData.readContactUsForms("contactUsUsers.json");
+        ContactUsUsers[] users = LoadingData.readContactUsForms("contactUsUsers.json");
         Object[][] data = new Object[users.length][1];
         for (int i = 0; i < users.length; i++) {
             data[i][0] = users[i];
@@ -24,44 +25,55 @@ public class ContactUs_TC6 extends BaseTest{
     }
 
     @Test(dataProvider = "contactUsData")
-    public void testContactUsForm(LoadingData.ContactUsUsers user) {
-        HomePage homePage = new HomePage(driver, helper);
+    public void testContactUsForm(ContactUsUsers user) {
         SoftAssert softAssert = new SoftAssert();
 
-        // Step 3: Verify Home Page
-        softAssert.assertTrue(homePage.isHomePageVisible(), "Home page is not isible!");
-        
-        // Step 4: Click on Contact Us
-        homePage.clickContactUs();
-        
-        // Step 5: Verify 'GET IN TOUCH' is visible
+        stepVerifyHomePage();
+        stepGoToContactUs();
+        stepFillContactForm(user);
+        stepSubmitForm();
+
+        softAssert.assertAll();
+    }
+
+    @Step("Step 3: Verify Home Page is visible")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected Output", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual Output", "Home page NOT visible");
+            throw new AssertionError("Home page is not visible!");
+        }
+    }
+
+    @Step("Step 4: Navigate to Contact Us page")
+    private void stepGoToContactUs() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickContactUs();
+        attachText("Expected Output", "Contact Us page visible");
+    }
+
+    @Step("Step 6-8: Fill and submit Contact Us form")
+    private void stepFillContactForm(ContactUsUsers user) {
         ContactUsPage contactUsPage = new ContactUsPage(driver, helper);
-        softAssert.assertEquals(contactUsPage.isGetInTouchVisible(), "GET IN TOUCH", "Header text mismatch!");
-        
-        // Step 6: Enter form details
         contactUsPage.enterName(user.contactUsFormName);
         contactUsPage.enterEmail(user.contactUsFormEmail);
         contactUsPage.enterSubject(user.contactUsFormSubject);
         contactUsPage.enterMessage(user.contactUsFormMsg);
-
-        // Step 7: Upload file
         contactUsPage.uploadFile(user.contactUsFormFilePath);
+        attachText("Test Input", "Filled contact form details and uploaded file");
+    }
 
-        // Step 8: Submit form
+    @Step("Step 9-10: Submit form and verify success message")
+    private void stepSubmitForm() {
+        ContactUsPage contactUsPage = new ContactUsPage(driver, helper);
         contactUsPage.clickSubmit();
-
-        // Step 9: Handle alert
         contactUsPage.acceptAlert();
-
-        // Step 10: Verify success message
-        softAssert.assertEquals(
-            contactUsPage.getSuccessMessage(),
-            "Success! Your details have been submitted successfully.",
-            "Success message mismatch!"
-        );
-
-        // Step 11: Go back home
-        homePage = contactUsPage.clickHomeButton();
-        softAssert.assertTrue(homePage.isHomePageVisible(), "Home page not visible after Contact Us submission");
+        attachText("Expected Output", "Success! Your details have been submitted successfully.");
+        if (!contactUsPage.getSuccessMessage().equals("Success! Your details have been submitted successfully.")) {
+            attachText("Actual Output", contactUsPage.getSuccessMessage());
+            throw new AssertionError("Contact form submission failed!");
+        }
+        contactUsPage.clickHomeButton();
     }
 }

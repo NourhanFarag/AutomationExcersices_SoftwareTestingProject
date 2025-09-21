@@ -27,17 +27,23 @@ public class BaseTest {
         helper.navigateToURL(BASE_URL);
     }
 
-    @AfterMethod (alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
-        if(ITestResult.FAILURE == result.getStatus()){
+        if (result.getStatus() == ITestResult.FAILURE) {
             saveScreenshotOnFailure();
+            String attachText = attachText("Test failure details", "Test '" + result.getName() + "' failed with exception: " + result.getThrowable());
         }
         Driver.quitDriver();
     }
-    
+
     // Capture screenshot and attach to Allure Report
     @Attachment(value = "Failure Screenshot", type = "image/png")
     public byte[] saveScreenshotOnFailure() {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    }
+    // Attach custom text to Allure report
+    @Attachment(value = "{0}", type = "text/plain")
+    public String attachText(String name, String message) {
+        return message;
     }
 }

@@ -1,60 +1,62 @@
 package tests;
 
-import Pages.HomePage;
-import Pages.ProductsPage;
+import Pages.*;
 import base.BaseTest;
+import io.qameta.allure.Step;
 import io.qameta.allure.Attachment;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import java.util.List;
 
 /**
- *
- * @author Nourhan
+ * 
+ * @author Nourhan Farag
  */
 public class SearchProduct_TC9 extends BaseTest {
 
     @Test
     public void searchProductTest() {
-        HomePage homePage = new HomePage(driver, helper);
-        ProductsPage productsPage = new ProductsPage(driver, helper);
+        stepVerifyHomePage();
+        stepGoToProductsPage();
+        stepSearchProduct("Tshirt");
+    }
 
-        // Step 3: Verify Home Page
-        Assert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
-
-        // Step 4: Click on 'Products' button
-        homePage.clickProducts();
-
-        // Step 5: Verify user is navigated to ALL PRODUCTS page
-        Assert.assertEquals(productsPage.getAllProductsHeaderText().toUpperCase(), "ALL PRODUCTS",
-                "User was not navigated to ALL PRODUCTS page!");
-
-        // Step 6: Enter product name in search and click search button
-        String searchKeyword = "Tshirt";
-        productsPage.searchForProduct(searchKeyword);
-
-        // Step 7: Verify 'SEARCHED PRODUCTS' is visible
-        Assert.assertEquals(productsPage.getSearchedProductsHeaderText().toUpperCase(), "SEARCHED PRODUCTS",
-                "'SEARCHED PRODUCTS' header is not visible!");
-
-        // Step 8: Verify products related to search are visible
-        Assert.assertTrue(productsPage.areSearchedProductsVisible(), "Searched products are not visible!");
-
-        // Step 9: Get all product names
-        List<String> productNames = productsPage.getAllSearchedProductNames();
-        System.out.println("===== Search Results for: " + searchKeyword + " =====");
-        for (String name : productNames) {
-            System.out.println(name);
+    @Step("Step 3: Verify Home Page is visible")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected Output", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual Output", "Home page NOT visible");
+            throw new AssertionError("Home page is not visible!");
         }
-        System.out.println("======================================");
-        // Attach to Allure report
-        saveSearchResultsToAllure(searchKeyword, productNames);
-        Assert.assertFalse(productNames.isEmpty(), "No products found in search results!");
+    }
+
+    @Step("Step 4: Navigate to Products page")
+    private void stepGoToProductsPage() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickProducts();
+        attachText("Expected Output", "Navigated to Products page");
+    }
+
+    @Step("Step 6-9: Search for product '{keyword}' and verify results")
+    private void stepSearchProduct(String keyword) {
+        ProductsPage products = new ProductsPage(driver, helper);
+        products.searchForProduct(keyword);
+
+        if (!products.getSearchedProductsHeaderText().equalsIgnoreCase("SEARCHED PRODUCTS")) {
+            attachText("Actual Output", products.getSearchedProductsHeaderText());
+            throw new AssertionError("'SEARCHED PRODUCTS' header is not visible!");
+        }
+
+        List<String> productNames = products.getAllSearchedProductNames();
+        attachSearchResultsToAllure(keyword, productNames);
+
+        if (productNames.isEmpty()) {
+            throw new AssertionError("No products found in search results!");
+        }
     }
 
     @Attachment(value = "Search Results", type = "text/plain")
-    public String saveSearchResultsToAllure(String keyword, List<String> productNames) {
+    private String attachSearchResultsToAllure(String keyword, List<String> productNames) {
         StringBuilder sb = new StringBuilder();
         sb.append("Search Keyword: ").append(keyword).append("\n\n");
         sb.append("Search Results:\n");

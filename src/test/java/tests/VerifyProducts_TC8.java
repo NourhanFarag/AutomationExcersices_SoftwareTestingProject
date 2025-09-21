@@ -2,39 +2,72 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
-import org.testng.Assert;
+import io.qameta.allure.Step;
 import org.testng.annotations.Test;
+
 /**
- *
+ * 
  * @author Nourhan Farag
  */
-public class VerifyProducts_TC8 extends BaseTest{
-    
+public class VerifyProducts_TC8 extends BaseTest {
+
     @Test
     public void testVerifyAllProductsAndProductDetail() {
-        HomePage homePage = new HomePage(driver, helper);
+        stepVerifyHomePage();
+        stepGoToProductsPage();
+        stepVerifyAllProductsPage();
+        stepVerifyFirstProductDetail();
+    }
 
-        // Step 3: Verify home page is visible
-        Assert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
+    @Step("Step 3: Verify Home Page is visible")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected Output", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual Output", "Home page NOT visible");
+            throw new AssertionError("Home page is not visible!");
+        }
+    }
 
-        // Step 4: Click on 'Products' button
-        ProductsPage productsPage = homePage.clickProducts();
+    @Step("Step 4: Navigate to Products page")
+    private void stepGoToProductsPage() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickProducts();
+        attachText("Expected Output", "Navigated to Products page");
+    }
 
-        // Step 5: Verify user is navigated to ALL PRODUCTS page
-        Assert.assertEquals(productsPage.getAllProductsHeaderText(), "ALL PRODUCTS", "Not on All Products page!");
+    @Step("Step 5-6: Verify ALL PRODUCTS page and products list")
+    private void stepVerifyAllProductsPage() {
+        ProductsPage products = new ProductsPage(driver, helper);
+        attachText("Expected Output", "ALL PRODUCTS header visible and products list visible");
+        if (!products.getAllProductsHeaderText().equals("ALL PRODUCTS")) {
+            attachText("Actual Output", products.getAllProductsHeaderText());
+            throw new AssertionError("Not on All Products page!");
+        }
+        if (!products.isProductsListVisible()) {
+            throw new AssertionError("Products list is not visible!");
+        }
+    }
 
-        // Step 6: Verify products list is visible
-        Assert.assertTrue(productsPage.isProductsListVisible(), "Products list is not visible!");
+    @Step("Step 7-9: Verify first product details")
+    private void stepVerifyFirstProductDetail() {
+        ProductsPage products = new ProductsPage(driver, helper);
+        ProductDetailPage detail = products.clickFirstViewProduct();
 
-        // Step 7: Click on 'View Product' of first product
-        ProductDetailPage detailPage = productsPage.clickFirstViewProduct();
+        if (!detail.getProductName().equals("Blue Top")) attachText("Product Name", detail.getProductName());
+        if (!detail.getCategory().equals("Category: Women > Tops")) attachText("Category", detail.getCategory());
+        if (!detail.getPrice().equals("Rs. 500")) attachText("Price", detail.getPrice());
+        if (!detail.getAvailability().equals("Availability: In Stock")) attachText("Availability", detail.getAvailability());
+        if (!detail.getCondition().equals("Condition: New")) attachText("Condition", detail.getCondition());
+        if (!detail.getBrand().equals("Brand: Polo")) attachText("Brand", detail.getBrand());
 
-        // Step 8 & 9: Verify product details with assertEquals
-        Assert.assertEquals(detailPage.getProductName(), "Blue Top", "Product name mismatch!");
-        Assert.assertEquals(detailPage.getCategory(), "Category: Women > Tops", "Category mismatch!");
-        Assert.assertEquals(detailPage.getPrice(), "Rs. 500", "Price mismatch!");
-        Assert.assertEquals(detailPage.getAvailability(), "Availability: In Stock", "Availability mismatch!");
-        Assert.assertEquals(detailPage.getCondition(), "Condition: New", "Condition mismatch!");
-        Assert.assertEquals(detailPage.getBrand(), "Brand: Polo", "Brand mismatch!");
+        if (!detail.getProductName().equals("Blue Top") ||
+            !detail.getCategory().equals("Category: Women > Tops") ||
+            !detail.getPrice().equals("Rs. 500") ||
+            !detail.getAvailability().equals("Availability: In Stock") ||
+            !detail.getCondition().equals("Condition: New") ||
+            !detail.getBrand().equals("Brand: Polo")) {
+            throw new AssertionError("Product details mismatch!");
+        }
     }
 }
