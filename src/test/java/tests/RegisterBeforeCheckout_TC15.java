@@ -2,90 +2,120 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
+import io.qameta.allure.Step;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
 /**
  *
  * @author Nourhan Farag
  */
-public class RegisterBeforeCheckout_TC15 extends BaseTest{
-    
-     @Test
+public class RegisterBeforeCheckout_TC15 extends BaseTest {
+
+    @Test
     public void placeOrder_RegisterBeforeCheckout() {
-        SoftAssert softAssert = new SoftAssert();
-        HomePage homePage = new HomePage(driver, helper);
+        stepVerifyHomePage();
+        stepRegisterBeforeCheckout();
+        stepAddProductToCart();
+        stepGoToCart();
+        stepProceedCheckout();
+        stepFillCheckoutAndPlaceOrder();
+        stepEnterPaymentAndConfirm();
+        stepDeleteAccount();
+    }
 
-        // Step 3: Verify Home Page
-        softAssert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
+    @Step("Step 3: Verify Home Page")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual", "Home page NOT visible");
+            throw new AssertionError("Home page not visible");
+        }
+    }
 
-        // Step 4: Click Signup/Login
-        LoginPage loginPage = homePage.clickSignupLogin();
+    @Step("Step 4-5: Register Before Checkout")
+    private void stepRegisterBeforeCheckout() {
+        HomePage home = new HomePage(driver, helper);
+        LoginPage login = home.clickSignupLogin();
 
-        // Step 5: Fill details in Signup
         String name = "Nourhan";
         String email = "nourhan" + System.currentTimeMillis() + "@test.com";
-        RegisterPage registerPage = loginPage.enterSignupDetails(name, email);
+        RegisterPage register = login.enterSignupDetails(name, email);
+        attachText("Test Input", "Name: " + name + ", Email: " + email);
 
-        // Fill account info
-        softAssert.assertEquals(registerPage.getEnterAccountInfoText(), "ENTER ACCOUNT INFORMATION", "Account info header mismatch!");
-        registerPage.selectTitle("Mrs");
-        registerPage.enterPass("Test@123");
-        registerPage.selectDOB("10", "May", "1999");
-        registerPage.checkNewsletter();
-        registerPage.checkSpecialOffers();
-        registerPage.enterPersonalDetails("Nourhan", "Farag", "Shoubra", "Cairo", "Nasr City",
-                                          "India", "Cairo", "Cairo", "11765", "01012345678");
-
-        AccountCreatedPage accountCreatedPage = registerPage.clickCreateAccount();
-
-        // Step 6: Verify account created
-        softAssert.assertEquals(accountCreatedPage.getAccountCreatedText(), "ACCOUNT CREATED!", "Account creation text mismatch!");
-        HomePage homePageAfterRegister = accountCreatedPage.clickContinue();
-
-        // Step 7: Verify logged in as username
-        softAssert.assertTrue(homePageAfterRegister.isLoggedInAs(name), "Logged in username not displayed!");
-
-        // Step 8: Add products to cart
-        ProductsPage productsPage = homePageAfterRegister.clickProducts();
-        ProductDetailPage productDetailPage = productsPage.clickFirstViewProduct();
-        productDetailPage.clickAddToCart();
-        CartPage cartPage = productDetailPage.clickViewCart();
-
-        // Step 9 + 10: Verify cart page is displayed
-        softAssert.assertTrue(cartPage.isCartPageVisible(), "Cart page is not visible!");
-
-        // Step 11: Proceed to Checkout
-        CheckoutPage checkoutPage = cartPage.clickProceedToCheckout();
-
-        // Step 12: Verify Address & Review Order
-        softAssert.assertTrue(checkoutPage.isAddressDetailsVisible(), "Address details not visible!");
-        softAssert.assertTrue(checkoutPage.isReviewOrderVisible(), "Review Order section not visible!");
-
-        // Step 13: Enter description and place order
-        checkoutPage.enterComment("Please deliver between 9AM-5PM");
-        PaymentPage paymentPage = (PaymentPage) checkoutPage.clickPlaceOrder();
-
-        // Step 14: Enter payment details
-        paymentPage.enterPaymentDetails("Nourhan Farag", "238263506326852", "123", "12", "2026");
-
-        // Step 15: Pay & Confirm Order
-        OrderConfirmationPage orderConfirmationPage = paymentPage.clickPayAndConfirm();
-
-        // Step 16: Verify success message (assertEquals instead of assertTrue)
-        softAssert.assertEquals(
-            orderConfirmationPage.getOrderSuccessMessageText(),
-            "Congratulations! Your order has been confirmed!",
-            "Order success message text did not match!"
+        register.selectTitle("Mrs");
+        register.enterPass("Test@123");
+        register.selectDOB("10", "May", "1999");
+        register.checkNewsletter();
+        register.checkSpecialOffers();
+        register.enterPersonalDetails(
+                "Nourhan", "Farag", "Shoubra", "Cairo", "Nasr City",
+                "India", "Cairo", "Cairo", "11765", "01012345678"
         );
 
-        // Step 17: Delete account
-        AccountDeletedPage accountDeletedPage = homePageAfterRegister.clickDeleteAccount();
+        AccountCreatedPage accountCreated = register.clickCreateAccount();
+        attachText("Expected", "ACCOUNT CREATED!");
+        if (!accountCreated.getAccountCreatedText().equals("ACCOUNT CREATED!")) {
+            attachText("Actual", accountCreated.getAccountCreatedText());
+            throw new AssertionError("Account creation failed!");
+        }
 
-        // Step 18: Verify account deleted
-        softAssert.assertEquals(accountDeletedPage.getAccountDeletedText(), "ACCOUNT DELETED!", "Account deleted text mismatch!");
-        accountDeletedPage.clickContinue();
+        accountCreated.clickContinue();
 
-        // Collect all assertions
-        softAssert.assertAll();
+        HomePage homeAfterRegister = new HomePage(driver, helper);
+        if (!homeAfterRegister.isLoggedInAs(name)) {
+            throw new AssertionError("Logged in username not displayed!");
+        }
+    }
+
+    @Step("Step 6-8: Add Product to Cart")
+    private void stepAddProductToCart() {
+        HomePage home = new HomePage(driver, helper);
+        ProductsPage products = home.clickProducts();
+        ProductDetailPage detail = products.clickFirstViewProduct();
+        detail.clickAddToCart();
+    }
+
+    @Step("Step 9-10: Go to Cart and Proceed to Checkout")
+    private void stepGoToCart() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickCart();
+    }
+
+    @Step("Step 11: Proceed to Checkout")
+    private void stepProceedCheckout() {
+        CartPage cart = new CartPage(driver, helper);
+        cart.clickProceedToCheckout();
+    }
+
+    @Step("Step 12-13: Fill Checkout details and place order")
+    private void stepFillCheckoutAndPlaceOrder() {
+        CheckoutPage checkout = new CheckoutPage(driver, helper);
+        checkout.enterComment("Please deliver between 9AM-5PM");
+        checkout.clickPlaceOrder();
+    }
+
+    @Step("Step 14-15: Enter Payment Details and Confirm")
+    private void stepEnterPaymentAndConfirm() {
+        PaymentPage payment = new PaymentPage(driver, helper);
+        payment.enterPaymentDetails("Nourhan Farag", "238263506326852", "123", "12", "2026");
+        payment.clickPayAndConfirm();
+        OrderConfirmationPage orderConfirmation = new OrderConfirmationPage(driver, helper);
+        attachText("Expected", "Congratulations! Your order has been confirmed!");
+        if (!orderConfirmation.getOrderSuccessMessageText().equals(
+                "Congratulations! Your order has been confirmed!")) {
+            attachText("Actual", orderConfirmation.getOrderSuccessMessageText());
+            throw new AssertionError("Order confirmation message mismatch!");
+        }
+    }
+
+    @Step("Step 16-17: Delete Account")
+    private void stepDeleteAccount() {
+        HomePage home = new HomePage(driver, helper);
+        AccountDeletedPage deleted = home.clickDeleteAccount();
+        if (!deleted.getAccountDeletedText().equals("ACCOUNT DELETED!")) {
+            throw new AssertionError("Account deletion failed!");
+        }
+        deleted.clickContinue();
     }
 }

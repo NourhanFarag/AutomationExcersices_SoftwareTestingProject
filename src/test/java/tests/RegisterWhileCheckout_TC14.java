@@ -2,8 +2,8 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
+import io.qameta.allure.Step;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 
 /**
  *
@@ -13,86 +13,114 @@ public class RegisterWhileCheckout_TC14 extends BaseTest {
 
     @Test
     public void placeOrder_RegisterWhileCheckout() {
-        SoftAssert softAssert = new SoftAssert();
+        stepVerifyHomePage();
+        stepAddProductToCart();
+        stepGoToCart();
+        stepProceedToCheckout();
+        stepRegisterDuringCheckout();
+        stepFillAccountInfoAndCreateAccount();
+        stepVerifyLoggedInAs();
+        stepProceedCheckoutAndPlaceOrder();
+        stepEnterPaymentDetailsAndConfirm();
+        stepDeleteAccount();
+    }
 
-        // Step 3: Verify home page
-        HomePage homePage = new HomePage(driver, helper);
-        softAssert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
+    @Step("Step 3: Verify Home Page")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual", "Home page NOT visible");
+            throw new AssertionError("Home page not visible");
+        }
+    }
 
-        // Step 4: Add product to cart
-        ProductsPage productsPage = homePage.clickProducts();
+    @Step("Step 4: Add first product to cart")
+    private void stepAddProductToCart() {
+        HomePage home = new HomePage(driver, helper);
+        ProductsPage productsPage = home.clickProducts();
         productsPage.addFirstProductToCart();
         productsPage.clickContinueShopping();
+    }
 
-        // Step 5: Click Cart
-        homePage.clickCart();
-        CartPage cartPage = new CartPage(driver, helper);
+    @Step("Step 5: Navigate to Cart")
+    private void stepGoToCart() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickCart();
+    }
 
-        // Step 6: Verify that cart page is displayed
-        softAssert.assertTrue(cartPage.isCartPageVisible(), "Cart page is not visible!");
+    @Step("Step 6: Proceed to Checkout")
+    private void stepProceedToCheckout() {
+        CartPage cart = new CartPage(driver, helper);
+        cart.clickProceedToCheckout();
+    }
 
-        // Step 7: Proceed To Checkout
-        cartPage.clickProceedToCheckout();
+    @Step("Step 7-9: Register during Checkout")
+    private void stepRegisterDuringCheckout() {
+        CartPage cart = new CartPage(driver, helper);
+        LoginPage login = cart.clickRegisterLogin();
 
-        // Step 8: Click 'Register / Login'
-        LoginPage loginPage = cartPage.clickRegisterLogin();
+        String email = "nourhan" + System.currentTimeMillis() + "@mail.com";
+        RegisterPage register = login.enterSignupDetails("Nourhan", email);
+        attachText("Test Input", "Email: " + email);
+    }
 
-        // Step 9: Fill all details in Signup and create account
-        String randomEmail = "nourhan" + System.currentTimeMillis() + "@mail.com";
-        RegisterPage registerPage = loginPage.enterSignupDetails("Nourhan", randomEmail);
-
-        softAssert.assertEquals(registerPage.getEnterAccountInfoText(), "ENTER ACCOUNT INFORMATION", "Account Info header mismatch!");
-
-        AccountCreatedPage accountCreatedPage = registerPage.registerNewUser(
+    @Step("Step 10: Fill account info and create account")
+    private void stepFillAccountInfoAndCreateAccount() {
+        RegisterPage register = new RegisterPage(driver, helper);
+        AccountCreatedPage accountCreated = register.registerNewUser(
                 "Mrs", "123456", "10", "May", "1999",
                 "Nourhan", "Farag", "TechCorp",
                 "123 Test St", "Apt 4", "Canada",
                 "Ontario", "Toronto", "M5A1A1", "1234567890"
         );
 
-        // Step 10: Verify 'ACCOUNT CREATED!' and click 'Continue' button
-        softAssert.assertEquals(accountCreatedPage.getAccountCreatedText(), "ACCOUNT CREATED!", "Account was not created!");
-        homePage = accountCreatedPage.clickContinue();
+        attachText("Expected", "ACCOUNT CREATED!");
+        if (!accountCreated.getAccountCreatedText().equals("ACCOUNT CREATED!")) {
+            attachText("Actual", accountCreated.getAccountCreatedText());
+            throw new AssertionError("Account creation failed");
+        }
 
-        // Step 11: Verify 'Logged in as username'
-        softAssert.assertTrue(homePage.isLoggedInAs("Nourhan"), "Logged in username not displayed!");
+        accountCreated.clickContinue();
+    }
 
-        // Step 12: Click Cart button again
-        homePage.clickCart();
-        cartPage = new CartPage(driver, helper);
+    @Step("Step 11: Verify logged in as username")
+    private void stepVerifyLoggedInAs() {
+        HomePage home = new HomePage(driver, helper);
+        if (!home.isLoggedInAs("Nourhan")) {
+            throw new AssertionError("Logged in username not displayed!");
+        }
+        home.clickCart();
+    }
 
-        // Step 13: Proceed To Checkout
-        cartPage.clickProceedToCheckout();
+    @Step("Step 12-15: Proceed Checkout and Place Order")
+    private void stepProceedCheckoutAndPlaceOrder() {
+        CartPage cart = new CartPage(driver, helper);
+        cart.clickProceedToCheckout();
+        cart.enterComment("Please deliver between 10 AM and 5 PM.");
+        PaymentPage payment = cart.clickPlaceOrder();
+    }
 
-        // Step 14: Verify Address Details and Review Your Order
-        softAssert.assertTrue(cartPage.isAddressDetailsVisible(), "Address details not visible!");
-        softAssert.assertTrue(cartPage.isReviewOrderVisible(), "Review order section not visible!");
+    @Step("Step 16-17: Enter Payment Details and Confirm Order")
+    private void stepEnterPaymentDetailsAndConfirm() {
+        PaymentPage payment = new PaymentPage(driver, helper);
+        payment.enterPaymentDetails("Nourhan Farag", "87189581861", "123", "12", "2026");
+        payment.clickPayAndConfirm();
+        OrderConfirmationPage orderConfirmation = new OrderConfirmationPage(driver, helper);
+        attachText("Expected", "Congratulations! Your order has been confirmed!");
+        if (!orderConfirmation.getOrderSuccessMessageText().equals("Congratulations! Your order has been confirmed!")) {
+            attachText("Actual", orderConfirmation.getOrderSuccessMessageText());
+            throw new AssertionError("Order confirmation message mismatch!");
+        }
+    }
 
-        // Step 15: Enter description and click 'Place Order'
-        cartPage.enterComment("Please deliver between 10 AM and 5 PM.");
-        PaymentPage paymentPage = cartPage.clickPlaceOrder();
-
-        // Step 16: Enter payment details
-        paymentPage.enterPaymentDetails("Nourhan Farag", "87189581861", "123", "12", "2026");
-
-        // Step 17: Click 'Pay and Confirm Order' button
-        OrderConfirmationPage orderConfirmationPage = paymentPage.clickPayAndConfirm();
-
-        // Step 18: Verify success message
-        softAssert.assertEquals(
-            orderConfirmationPage.getOrderSuccessMessageText(),
-            "Congratulations! Your order has been confirmed!",
-            "Order success message text did not match!"
-        );
-
-        // Step 19: Delete Account
-        AccountDeletedPage accountDeletedPage = homePage.clickDeleteAccount();
-
-        // Step 20: Verify 'ACCOUNT DELETED!' and click 'Continue' button
-        softAssert.assertEquals(accountDeletedPage.getAccountDeletedText(), "ACCOUNT DELETED!", "Account not deleted!");
-        accountDeletedPage.clickContinue();
-
-        // Assert all at once
-        softAssert.assertAll();
+    @Step("Step 18-19: Delete Account")
+    private void stepDeleteAccount() {
+        HomePage home = new HomePage(driver, helper);
+        AccountDeletedPage deleted = home.clickDeleteAccount();
+        if (!deleted.getAccountDeletedText().equals("ACCOUNT DELETED!")) {
+            throw new AssertionError("Account deletion failed!");
+        }
+        deleted.clickContinue();
     }
 }

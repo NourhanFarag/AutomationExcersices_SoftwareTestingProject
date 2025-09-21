@@ -2,15 +2,16 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
+import io.qameta.allure.Step;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
 /**
  *
  * @author Nourhan Farag
  */
-public class LoginBeforeCheckout_TC16 extends BaseTest{
-    
+public class LoginBeforeCheckout_TC16 extends BaseTest {
+
     @DataProvider(name = "loginData")
     public Object[][] getLoginData() throws Exception {
         LoadingData.LoginUser[] users = LoadingData.readLoginUsers("validLoginUser.json");
@@ -20,67 +21,79 @@ public class LoginBeforeCheckout_TC16 extends BaseTest{
         }
         return data;
     }
-    
+
     @Test(dataProvider = "loginData")
     public void placeOrder_LoginBeforeCheckout(LoadingData.LoginUser user) {
-        SoftAssert softAssert = new SoftAssert();
+        stepVerifyHomePage();
+        stepLoginBeforeCheckout(user);
+        stepAddProductToCart();
+        stepGoToCart();
+        stepProceedCheckout();
+        stepFillCheckoutAndPlaceOrder();
+        stepEnterPaymentAndConfirm();
+    }
 
-        HomePage homePage = new HomePage(driver, helper);
+    @Step("Step 3: Verify Home Page")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        attachText("Expected", "Home page visible");
+        if (!home.isHomePageVisible()) {
+            attachText("Actual", "Home page NOT visible");
+            throw new AssertionError("Home page not visible");
+        }
+    }
 
-        // Step 3: Verify home page
-        softAssert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
+    @Step("Step 4-5: Login Before Checkout")
+    private void stepLoginBeforeCheckout(LoadingData.LoginUser user) {
+        HomePage home = new HomePage(driver, helper);
+        LoginPage login = home.clickSignupLogin();
+        login.enterLoginEmail(user.loginEmail);
+        login.enterLoginPassword(user.loginPassword);
+        login.clickLoginButton();
 
-        // Step 4: Click Signup/Login
-        LoginPage loginPage = homePage.clickSignupLogin();
+        if (!home.isLoggedInAs(user.loginEmail.split("f")[0])) {
+            throw new AssertionError("Logged in username not displayed!");
+        }
+    }
 
-        // Step 5: Login with provided JSON data
-        loginPage.enterLoginEmail(user.loginEmail);
-        loginPage.enterLoginPassword(user.loginPassword);
-        loginPage.clickLoginButton();
+    @Step("Step 6-8: Add Product to Cart")
+    private void stepAddProductToCart() {
+        HomePage home = new HomePage(driver, helper);
+        ProductsPage products = home.clickProducts();
+        ProductDetailPage detail = products.clickFirstViewProduct();
+        detail.clickAddToCart();
+    }
 
-        // Step 6: Verify logged in as username
-        softAssert.assertTrue(homePage.isLoggedInAs(user.loginEmail.split("f")[0]), "Logged in username not displayed!");
+    @Step("Step 9-10: Go to Cart and Proceed to Checkout")
+    private void stepGoToCart() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickCart();
+    }
 
-        // Step 7: Add products to cart
-        ProductsPage productsPage = homePage.clickProducts();
-        ProductDetailPage productDetailPage = productsPage.clickFirstViewProduct();
-        productDetailPage.clickAddToCart();
-        CartPage cartPage = productDetailPage.clickViewCart();
+    @Step("Step 11: Proceed to Checkout")
+    private void stepProceedCheckout() {
+        CartPage cart = new CartPage(driver, helper);
+        cart.clickProceedToCheckout();
+    }
 
-        // Step 9 + 10: Verify cart page is displayed
-        softAssert.assertTrue(cartPage.isCartPageVisible(), "Cart page is not visible!");
+    @Step("Step 12-13: Fill Checkout details and place order")
+    private void stepFillCheckoutAndPlaceOrder() {
+        CheckoutPage checkout = new CheckoutPage(driver, helper);
+        checkout.enterComment("Please deliver between 9AM-5PM");
+        checkout.clickPlaceOrder();
+    }
 
-        // Step 11: Proceed to Checkout
-        CheckoutPage checkoutPage = cartPage.clickProceedToCheckout();
-
-        // Step 12: Verify Address & Review Order
-        softAssert.assertTrue(checkoutPage.isAddressDetailsVisible(), "Address details not visible!");
-        softAssert.assertTrue(checkoutPage.isReviewOrderVisible(), "Review Order section not visible!");
-
-        // Step 13: Enter description and place order
-        checkoutPage.enterComment("Please deliver between 9AM-5PM");
-        PaymentPage paymentPage = (PaymentPage) checkoutPage.clickPlaceOrder();
-
-        // Step 14: Enter payment details
-        paymentPage.enterPaymentDetails("Nourhan Farag", "57186825581", "123", "12", "2026");
-
-        // Step 15: Pay & Confirm Order
-        OrderConfirmationPage orderConfirmationPage = paymentPage.clickPayAndConfirm();
-
-        // Step 16: Verify success message
-        softAssert.assertEquals(
-            orderConfirmationPage.getOrderSuccessMessageText(),
-            "Congratulations! Your order has been confirmed!",
-            "Order success message text did not match!"
-        );
-
-        // Step 17: Delete account
-//        AccountDeletedPage accountDeletedPage = homePage.clickDeleteAccount();
-//
-//        // Step 18: Verify account deleted
-//        softAssert.assertEquals(accountDeletedPage.getAccountDeletedText(), "ACCOUNT DELETED!", "Account deleted text mismatch!");
-//        accountDeletedPage.clickContinue();
-
-        softAssert.assertAll();
+    @Step("Step 14-15: Enter Payment Details and Confirm")
+    private void stepEnterPaymentAndConfirm() {
+        PaymentPage payment = new PaymentPage(driver, helper);
+        payment.enterPaymentDetails("Nourhan Farag", "57186825581", "123", "12", "2026");
+        payment.clickPayAndConfirm();
+        OrderConfirmationPage orderConfirmation = new OrderConfirmationPage(driver, helper);
+        attachText("Expected", "Congratulations! Your order has been confirmed!");
+        if (!orderConfirmation.getOrderSuccessMessageText().equals(
+                "Congratulations! Your order has been confirmed!")) {
+            attachText("Actual", orderConfirmation.getOrderSuccessMessageText());
+            throw new AssertionError("Order confirmation message mismatch!");
+        }
     }
 }

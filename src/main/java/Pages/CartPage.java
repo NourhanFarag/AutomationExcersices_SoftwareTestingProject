@@ -15,7 +15,7 @@ public class CartPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
     
-    private final By subscriptionSection = By.cssSelector("div.footer-widget h2"); // 'SUBSCRIPTION'
+    private final By subscriptionSection = By.cssSelector("div.footer-widget h2");
     private final By emailInput = By.id("susbscribe_email");
     private final By subscribeButton = By.id("subscribe");
     private final By successMessage = By.cssSelector("div.alert-success.alert");
@@ -139,5 +139,14 @@ public class CartPage {
     
     public boolean isAnyProductInCart() {
         return !driver.findElements(By.cssSelector(".cart_description")).isEmpty();
+    }
+    
+    public boolean isSubscriptionSectionVisible() {
+        try {
+            WebElement subscriptionText = driver.findElement(By.xpath("//h2[text()='Subscription']"));
+            return subscriptionText.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

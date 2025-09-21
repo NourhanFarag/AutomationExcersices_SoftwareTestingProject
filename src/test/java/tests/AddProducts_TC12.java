@@ -2,69 +2,62 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
-import org.testng.Assert;
+import io.qameta.allure.Step;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
 /**
  *
  * @author Nourhan Farag
  */
-public class AddProducts_TC12 extends BaseTest{
-    
+public class AddProducts_TC12 extends BaseTest {
+
     @Test
     public void addProductsInCart() {
-        HomePage homePage = new HomePage(driver, helper);
+        stepVerifyHomePage();
+        stepGoToProductsPage();
+        stepAddFirstProduct();
+        stepAddSecondProduct();
+        stepVerifyCartProducts();
+    }
 
-        // Step 3: Verify Home Page (Hard Assert)
-        Assert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
+    @Step("Step 3: Verify Home Page")
+    private void stepVerifyHomePage() {
+        HomePage home = new HomePage(driver, helper);
+        if (!home.isHomePageVisible()) {
+            attachText("Actual Output", "Home page not visible");
+            throw new AssertionError("Home page not visible!");
+        }
+    }
 
-        // Step 4: Click on 'Products'
-        homePage.clickProducts();
+    @Step("Step 4: Navigate to Products Page")
+    private void stepGoToProductsPage() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickProducts();
+    }
 
-        ProductsPage productsPage = new ProductsPage(driver, helper);
-        Assert.assertTrue(productsPage.isProductsListVisible(), "Products list is not visible!");
+    @Step("Step 5-6: Add first product to cart")
+    private void stepAddFirstProduct() {
+        ProductsPage products = new ProductsPage(driver, helper);
+        products.addFirstProductToCart();
+        products.clickContinueShopping();
+    }
 
-        // Step 5: Hover over first product and click 'Add to cart'
-        productsPage.addFirstProductToCart();
+    @Step("Step 7-8: Add second product and view cart")
+    private void stepAddSecondProduct() {
+        ProductsPage products = new ProductsPage(driver, helper);
+        products.addSecondProductToCart();
+        products.clickViewCart();
+    }
 
-        // Step 6: Click 'Continue Shopping'
-        productsPage.clickContinueShopping();
+    @Step("Step 9-10: Verify products in cart")
+    private void stepVerifyCartProducts() {
+        CartPage cart = new CartPage(driver, helper);
 
-        // Step 7: Hover over second product and click 'Add to cart'
-        productsPage.addSecondProductToCart();
+        attachText("First Product", cart.getFirstProductName() + " | " + cart.getFirstProductQuantity() + " | " + cart.getFirstProductPrice());
+        attachText("Second Product", cart.getSecondProductName() + " | " + cart.getSecondProductQuantity() + " | " + cart.getSecondProductPrice());
 
-        // Step 8: Click 'View Cart'
-        productsPage.clickViewCart();
-
-        CartPage cartPage = new CartPage(driver, helper);
-        Assert.assertTrue(cartPage.isCartPageVisible(), "Cart table is not visible!");
-
-        // Step 9 + 10: Verify product names, prices, quantities, totals
-        SoftAssert softAssert = new SoftAssert();
-
-        // Product names
-        softAssert.assertFalse(cartPage.getFirstProductName().isEmpty(), "First product name is missing!");
-        softAssert.assertFalse(cartPage.getSecondProductName().isEmpty(), "Second product name is missing!");
-
-        // Prices
-        softAssert.assertTrue(cartPage.getFirstProductPrice().startsWith("Rs."), "First product price is invalid!");
-        softAssert.assertTrue(cartPage.getSecondProductPrice().startsWith("Rs."), "Second product price is invalid!");
-
-        // Quantities
-        softAssert.assertEquals(cartPage.getFirstProductQuantity(), "1", "First product quantity mismatch!");
-        softAssert.assertEquals(cartPage.getSecondProductQuantity(), "1", "Second product quantity mismatch!");
-
-        // Totals
-        softAssert.assertTrue(cartPage.getFirstProductTotal().startsWith("Rs."), "First product total invalid!");
-        softAssert.assertTrue(cartPage.getSecondProductTotal().startsWith("Rs."), "Second product total invalid!");
-
-        System.out.println("Cart Products:");
-        System.out.println("1 of " + cartPage.getFirstProductName() + " | " + cartPage.getFirstProductPrice() +
-                " | Qty: " + cartPage.getFirstProductQuantity() + " | Total: " + cartPage.getFirstProductTotal());
-        System.out.println("2 of " + cartPage.getSecondProductName() + " | " + cartPage.getSecondProductPrice() +
-                " | Qty: " + cartPage.getSecondProductQuantity() + " | Total: " + cartPage.getSecondProductTotal());
-
-        // Collect all soft asserts
-        softAssert.assertAll();
+        if (!cart.getFirstProductQuantity().equals("1") || !cart.getSecondProductQuantity().equals("1")) {
+            throw new AssertionError("Product quantities mismatch in cart!");
+        }
     }
 }

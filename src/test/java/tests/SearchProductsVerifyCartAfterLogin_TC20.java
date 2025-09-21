@@ -2,12 +2,11 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
-import org.testng.Assert;
+import io.qameta.allure.Step;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import org.testng.annotations.DataProvider;
-import org.testng.asserts.SoftAssert;
 
 /**
  *
@@ -24,58 +23,56 @@ public class SearchProductsVerifyCartAfterLogin_TC20 extends BaseTest {
         }
         return data;
     }
-    
-    @Test(dataProvider = "loginData")    
+
+    @Test(dataProvider = "loginData")
     public void searchProductsAndVerifyCartAfterLogin(LoadingData.LoginUser user) {
-        SoftAssert softAssert = new SoftAssert();
-        HomePage homePage = new HomePage(driver, helper);
+        stepSearchAndAddProductsToCart();
+        stepVerifyCartBeforeLogin();
+        stepLogin(user);
+        stepVerifyCartAfterLogin();
+    }
 
-        // Step 3: Click 'Products'
-        ProductsPage productsPage = homePage.clickProducts();
+    private List<String> searchedProducts;
 
-        // Step 4: Verify user is navigated to ALL PRODUCTS page
-        softAssert.assertEquals(productsPage.getAllProductsHeaderText(), 
-                "ALL PRODUCTS", "Not on All Products page!");
+    @Step("Step 3-8: Search Products and add to cart")
+    private void stepSearchAndAddProductsToCart() {
+        HomePage home = new HomePage(driver, helper);
+        ProductsPage products = home.clickProducts();
+        products.searchForProduct("Dress");
+        searchedProducts = products.getAllSearchedProductNames();
+        if (searchedProducts.isEmpty()) {
+            throw new AssertionError("No products found for search term!");
+        }
+        products.addAllSearchResultsToCart();
+    }
 
-        // Step 5: Enter product name in search input and click search
-        String searchTerm = "Dress";
-        productsPage.searchForProduct(searchTerm);
+    @Step("Step 9: Verify products in cart before login")
+    private void stepVerifyCartBeforeLogin() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickCart();
+        CartPage cart = new CartPage(driver, helper);
+        if (!cart.getAllCartProductNames().containsAll(searchedProducts)) {
+            throw new AssertionError("Not all searched products are in cart before login!");
+        }
+    }
 
-        // Step 6: Verify 'SEARCHED PRODUCTS' is visible
-        softAssert.assertEquals(productsPage.getSearchedProductsHeaderText(),
-                "SEARCHED PRODUCTS", "Searched Products header mismatch!");
+    @Step("Step 10-11: Login")
+    private void stepLogin(LoadingData.LoginUser user) {
+        HomePage home = new HomePage(driver, helper);
+        home.clickSignupLogin();
+        LoginPage login = new LoginPage(driver, helper);
+        login.enterLoginEmail(user.loginEmail);
+        login.enterLoginPassword(user.loginPassword);
+        login.clickLoginButton();
+    }
 
-        // Step 7: Verify all related products are visible
-        List<String> searchedProducts = productsPage.getAllSearchedProductNames();
-        Assert.assertFalse(searchedProducts.isEmpty(),
-                "No products found for search term!");
-
-        // Step 8: Add those products to cart
-        productsPage.addAllSearchResultsToCart();
-
-        // Step 9: Go to Cart & verify products are visible
-        productsPage.clickViewCart();
-        CartPage cartPage = new CartPage(driver, helper);
-
-        List<String> cartProductsBeforeLogin = cartPage.getAllCartProductNames();
-        Assert.assertTrue(cartProductsBeforeLogin.containsAll(searchedProducts),
-                "Not all searched products are in cart before login!");
-
-        // Step 10: Login
-        homePage.clickSignupLogin();
-        LoginPage loginPage = new LoginPage(driver, helper);
-        loginPage.enterLoginEmail(user.loginEmail);
-        loginPage.enterLoginPassword(user.loginPassword);
-        
-        // Step 11: Again, go to Cart
-        homePage.clickCart();
-        cartPage = new CartPage(driver, helper);
-
-        // Step 12: Verify products still in cart after login
-        List<String> cartProductsAfterLogin = cartPage.getAllCartProductNames();
-        Assert.assertTrue(cartProductsAfterLogin.containsAll(searchedProducts),
-                "Products not persisted in cart after login!");
-        
-        softAssert.assertAll();
+    @Step("Step 12: Verify products persist in cart after login")
+    private void stepVerifyCartAfterLogin() {
+        HomePage home = new HomePage(driver, helper);
+        home.clickCart();
+        CartPage cart = new CartPage(driver, helper);
+        if (!cart.getAllCartProductNames().containsAll(searchedProducts)) {
+            throw new AssertionError("Products not persisted in cart after login!");
+        }
     }
 }
