@@ -28,7 +28,7 @@ public class CartPage {
     private final By secondProductQuantity = By.xpath("//tr[2]//td[@class='cart_quantity']/button");
     private final By firstProductTotal = By.xpath("//tr[1]//td[@class='cart_total']/p");
     private final By secondProductTotal = By.xpath("//tr[2]//td[@class='cart_total']/p");
-    private final By proceedToCheckoutBtn = By.xpath("//a[contains(text(),'Proceed To Checkout')]");
+    private final By proceedToCheckoutBtn =  By.cssSelector("a.btn.btn-default.check_out");
     private final By registerLoginBtn = By.xpath("//u[contains(text(),'Register / Login')]");
     private final By addressDetails = By.xpath("//h2[contains(text(),'Address Details')]");
     private final By reviewOrder = By.xpath("//h2[contains(text(),'Review Your Order')]");
@@ -92,7 +92,8 @@ public class CartPage {
     }
     
     public CheckoutPage clickProceedToCheckout() {
-        helper.click(proceedToCheckoutBtn);
+        helper.scrollToElement(proceedToCheckoutBtn);
+        helper.safeClick(proceedToCheckoutBtn);
         return new CheckoutPage(driver, helper);
     }
 

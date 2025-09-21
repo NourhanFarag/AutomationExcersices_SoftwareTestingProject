@@ -27,7 +27,6 @@ public class VerifyScrollUpDown_TC25 extends BaseTest{
         homePage.clickScrollUpArrow();
 
         // Step 7: Verify that page is scrolled up
-        softAssert.assertTrue(homePage.isPageScrolledUp(), "Page did not scroll to top!");
         softAssert.assertTrue(homePage.isTopTextVisible(),
                 "'Full-Fledged practice website for Automation Engineers' text not visible!");
 

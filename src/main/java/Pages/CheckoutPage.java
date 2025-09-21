@@ -13,6 +13,9 @@ public class CheckoutPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
 
+    // ===============================
+    // Locators
+    // ===============================
     private final By addressDetails = By.xpath("//h2[contains(text(),'Address Details')]");
     private final By reviewOrder = By.xpath("//h2[contains(text(),'Review Your Order')]");
     private final By commentTextArea = By.name("message");
@@ -25,6 +28,9 @@ public class CheckoutPage {
         this.helper = helper;
     }
 
+    // ===============================
+    // Verifications
+    // ===============================
     public boolean isAddressDetailsVisible() {
         return helper.isElementDisplayed(addressDetails);
     }
@@ -33,6 +39,9 @@ public class CheckoutPage {
         return helper.isElementDisplayed(reviewOrder);
     }
 
+    // ===============================
+    // Actions
+    // ===============================
     public void enterComment(String comment) {
         helper.sendKeys(commentTextArea, comment);
     }
@@ -42,6 +51,9 @@ public class CheckoutPage {
         return new PaymentPage(driver, helper);
     }
     
+    // ===============================
+    // Address Parsing
+    // ===============================
     public Address getDeliveryAddress() {
         return parseAddressBlock(deliveryAddressBox);
     }
@@ -66,5 +78,4 @@ public class CheckoutPage {
 
         return new Address(name, company, addr1, addr2, city, state, country, zipcode, mobile);
     }
-
 }

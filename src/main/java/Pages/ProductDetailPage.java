@@ -7,7 +7,9 @@ public class ProductDetailPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
 
-    // -------- Product Info Locators --------
+    // ===============================
+    // Locators
+    // ===============================
     private final By productName = By.xpath("//div[@class='product-information']/h2");
     private final By productCategory = By.xpath("//div[@class='product-information']/p[contains(text(),'Category')]");
     private final By productPrice = By.xpath("//div[@class='product-information']/span/span");
@@ -32,64 +34,29 @@ public class ProductDetailPage {
         this.helper = helper;
     }
 
-    // -------- Product Info Methods --------
-    public String getProductName() {
-        return helper.getText(productName);
-    }
+    // ===============================
+    // Product Info Methods
+    // ===============================
+    public String getProductName() { return helper.getText(productName); }
+    public String getCategory() { return helper.getText(productCategory); }
+    public String getPrice() { return helper.getText(productPrice); }
+    public String getAvailability() { return helper.getText(productAvailability); }
+    public String getCondition() { return helper.getText(productCondition); }
+    public String getBrand() { return helper.getText(productBrand); }
+    public boolean isProductInfoVisible() { return helper.isElementDisplayed(productInfo); }
+    public void setQuantity(String quantity) { helper.sendKeys(quantityInput, quantity); }
+    public void clickAddToCart() { helper.click(addToCartBtn); }
+    public CartPage clickViewCart() { helper.click(viewCartBtn); return new CartPage(driver, helper); }
 
-    public String getCategory() {
-        return helper.getText(productCategory);
-    }
-
-    public String getPrice() {
-        return helper.getText(productPrice);
-    }
-
-    public String getAvailability() {
-        return helper.getText(productAvailability);
-    }
-
-    public String getCondition() {
-        return helper.getText(productCondition);
-    }
-
-    public String getBrand() {
-        return helper.getText(productBrand);
-    }
-
-    public boolean isProductInfoVisible() {
-        return helper.isElementDisplayed(productInfo);
-    }
-
-    public void setQuantity(String quantity) {
-        helper.sendKeys(quantityInput, quantity);
-    }
-
-    public void clickAddToCart() {
-        helper.click(addToCartBtn);
-    }
-
-    public CartPage clickViewCart() {
-        helper.click(viewCartBtn);
-        return new CartPage(driver, helper);
-    }
-
-    // -------- Review Methods --------
-    public boolean isReviewSectionVisible() {
-        return helper.isElementDisplayed(reviewSection);
-    }
-
+    // ===============================
+    // Review Methods
+    // ===============================
+    public boolean isReviewSectionVisible() { return helper.isElementDisplayed(reviewSection); }
     public void enterReviewDetails(String name, String email, String reviewText) {
         helper.sendKeys(reviewNameInput, name);
         helper.sendKeys(reviewEmailInput, email);
         helper.sendKeys(reviewTextArea, reviewText);
     }
-
-    public void submitReview() {
-        helper.click(reviewSubmitBtn);
-    }
-
-    public String getReviewSuccessMessage() {
-        return helper.getText(reviewSuccessMsg);
-    }
+    public void submitReview() { helper.click(reviewSubmitBtn); }
+    public String getReviewSuccessMessage() { return helper.getText(reviewSuccessMsg); }
 }

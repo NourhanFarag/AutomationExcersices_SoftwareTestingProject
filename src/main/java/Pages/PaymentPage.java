@@ -6,12 +6,15 @@ import java.io.File;
 
 /**
  * 
- * @author Nourhan
+ * @author Nourhan Farag
  */
 public class PaymentPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
 
+    // ===============================
+    // Locators
+    // ===============================
     private final By nameOnCard = By.name("name_on_card");
     private final By cardNumber = By.name("card_number");
     private final By cvc = By.name("cvc");
@@ -22,7 +25,7 @@ public class PaymentPage {
     private final By downloadInvoiceBtn = By.xpath("//a[contains(text(),'Download Invoice')]");
     private final By continueBtn = By.xpath("//a[contains(text(),'Continue')]");
 
-    // Optional: Set this to your local Downloads folder
+    // local Downloads folder
     private final String downloadPath = System.getProperty("user.home") + "/Downloads/";
 
     public PaymentPage(WebDriver driver, SeleniumHelper helper) {
@@ -30,6 +33,9 @@ public class PaymentPage {
         this.helper = helper;
     }
 
+    // ===============================
+    // Payment Methods
+    // ===============================
     public PaymentPage enterPaymentDetails(String name, String number, String cvcCode, String month, String year) {
         helper.sendKeys(nameOnCard, name);
         helper.sendKeys(cardNumber, number);

@@ -11,6 +11,9 @@ public class AccountCreatedPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
 
+    // ===============================
+    // Locators
+    // ===============================
     private final By accountCreatedText = By.xpath("//b[text()='Account Created!']");
     private final By continueBtn = By.xpath("//a[@data-qa='continue-button']");
     
@@ -19,6 +22,10 @@ public class AccountCreatedPage {
         this.helper = helper;
     }
 
+    // ===============================
+    // Page Verifications
+    // ===============================
+    
     public String getAccountCreatedText() {
         return helper.getText(accountCreatedText).trim();
     }

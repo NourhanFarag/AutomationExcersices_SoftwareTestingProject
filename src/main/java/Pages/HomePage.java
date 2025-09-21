@@ -11,6 +11,9 @@ public class HomePage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
     
+    // ===============================
+    // Locators
+    // ===============================
     private final By homeLogo = By.cssSelector("img[alt='Website for automation practice']");
     private final By signupLoginBtn = By.xpath("//a[contains(text(),'Signup / Login')]");
     private final By loggedInAs = By.xpath("//a[contains(text(),'Logged in as')]");
@@ -32,28 +35,62 @@ public class HomePage {
     private final By recommendedSection = By.xpath("//h2[contains(text(),'recommended items')]");
     private final By firstRecommendedAddToCartBtn = By.xpath("(//div[@id='recommended-item-carousel']//a[contains(text(),'Add to cart')])[1]");
     private final By viewCartBtnRecommended = By.xpath("//u[contains(text(),'View Cart')]");
-    private final By scrollUpArrow = By.id("scrollUp"); // adjust locator if different
+    private final By scrollUpArrow = By.id("scrollUp");
+    private final By SubscriptionArrow = By.id("subscribe");
     private final By topText = By.xpath("//h2[contains(text(),'Full-Fledged practice website for Automation Engineers')]");
-
+    private final By footer = By.tagName("footer"); 
+    
     public HomePage(WebDriver driver, SeleniumHelper helper) {
         this.driver = driver;
         this.helper = helper;
     }
     
+    // ===============================
+    // Page Verifications
+    // ===============================
     public boolean isHomePageVisible() {
         return helper.isElementDisplayed(homeLogo);
-    }
-    
-    public LoginPage clickSignupLogin() {
-        helper.click(signupLoginBtn);
-        return new LoginPage(driver, helper);
     }
     
     public boolean isLoggedInAsVisible(String expectedUsername) {
         String text = helper.getText(loggedInAs);
         return text.contains(expectedUsername);
     }
+    
+    public boolean isLoggedInAs(String expectedUsername) {
+        return getLoggedInUsername().equalsIgnoreCase(expectedUsername == null ? "" : expectedUsername.trim());
+    }
 
+    public boolean isSubscriptionSectionVisible() {
+        return helper.isElementDisplayed(subscriptionText);
+    }
+    
+    public boolean isTopTextVisible() {
+        return helper.isElementDisplayed(topText);
+    }
+    
+    public boolean isTestCasesPageVisible() {
+        return helper.isElementDisplayed(testCasesHeader);
+    }
+    
+    public boolean isCategoriesSidebarVisible() {
+        return helper.isElementDisplayed(By.xpath("//div[@class='left-sidebar']/h2[text()='Category']"));
+    }
+    
+    public boolean isRecommendedSectionVisible() {
+        return helper.isElementDisplayed(recommendedSection);
+    }
+    
+    // ===============================
+    // Page Actions
+    // ===============================
+
+    public LoginPage clickSignupLogin() {
+        helper.click(signupLoginBtn);
+        return new LoginPage(driver, helper);
+    }
+    
+    
     public String getLoggedInAsText() {
         return helper.getText(loggedInAsText).trim();
     }
@@ -62,10 +99,7 @@ public class HomePage {
         return helper.getText(loggedInUsername).trim();
     }
 
-    public boolean isLoggedInAs(String expectedUsername) {
-        return getLoggedInUsername().equalsIgnoreCase(expectedUsername == null ? "" : expectedUsername.trim());
-    }
-
+    
     public AccountDeletedPage clickDeleteAccount() {
         helper.click(deleteAccountBtn);
         return new AccountDeletedPage(driver, helper);
@@ -88,17 +122,13 @@ public class HomePage {
         helper.click(testCasesButton);
     }
     
-    public boolean isTestCasesPageVisible() {
-        return helper.isElementDisplayed(testCasesHeader);
-    }
-    
     public ProductsPage clickProducts() {
         helper.click(productsButton);
         return new ProductsPage(driver, helper);
     }
     
     public void scrollToFooter() {
-        helper.scrollIntoView(subscriptionText);
+        helper.scrollIntoView(footer);
     }
 
     public String getSubscriptionText() {
@@ -122,10 +152,6 @@ public class HomePage {
         helper.safeClick(firstProductViewBtn);
     }
     
-    public boolean isCategoriesSidebarVisible() {
-        return helper.isElementDisplayed(By.xpath("//div[@class='left-sidebar']/h2[text()='Category']"));
-    }
-
     public ProductsPage selectCategory(String mainCategory, String subCategory) {
         // Expand main category
         By mainCategoryLocator = By.xpath("//div[@class='panel-group category-products']//a[@href='#" + mainCategory + "']");
@@ -136,14 +162,6 @@ public class HomePage {
         helper.click(subCategoryLocator);
 
         return new ProductsPage(driver, helper);
-    }
-    
-    public void scrollToBottom() {
-        helper.scrollToBottom();
-    }
-
-    public boolean isRecommendedSectionVisible() {
-        return helper.isElementDisplayed(recommendedSection);
     }
 
     public void addFirstRecommendedProductToCart() {
@@ -156,21 +174,12 @@ public class HomePage {
         return new CartPage(driver, helper);
     }
 
-    public boolean isSubscriptionSectionVisible() {
-        return helper.isElementDisplayed(subscriptionText);
-    }
-
     public void clickScrollUpArrow() {
         helper.click(scrollUpArrow);
         helper.waitForVisibility(topText, 5);
     }
-
-    public boolean isTopTextVisible() {
-        return helper.isElementDisplayed(topText);
-    }
-
-    public boolean isPageScrolledUp() {
-        Number scrollTop = (Number) ((JavascriptExecutor) driver).executeScript("return window.pageYOffset;");
-        return scrollTop.longValue() < 100;
+    
+    public void scrollToBottom() {
+        helper.scrollToElement(SubscriptionArrow);
     }
 }

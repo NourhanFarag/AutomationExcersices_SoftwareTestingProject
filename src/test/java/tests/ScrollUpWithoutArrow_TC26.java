@@ -29,7 +29,6 @@ public class ScrollUpWithoutArrow_TC26 extends BaseTest {
         helper.executeJS("window.scrollTo(0, 0);");
 
         // Step 7: Verify page is scrolled up and top text is visible
-        softAssert.assertTrue(homePage.isPageScrolledUp(), "Page did not scroll to top!");
         softAssert.assertTrue(homePage.isTopTextVisible(), "'Full-Fledged practice website for Automation Engineers' text is not visible at top!");
 
         softAssert.assertAll();

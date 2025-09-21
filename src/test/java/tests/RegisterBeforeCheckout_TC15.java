@@ -63,7 +63,7 @@ public class RegisterBeforeCheckout_TC15 extends BaseTest{
 
         // Step 13: Enter description and place order
         checkoutPage.enterComment("Please deliver between 9AM-5PM");
-        PaymentPage paymentPage = checkoutPage.clickPlaceOrder();
+        PaymentPage paymentPage = (PaymentPage) checkoutPage.clickPlaceOrder();
 
         // Step 14: Enter payment details
         paymentPage.enterPaymentDetails("Nourhan Farag", "238263506326852", "123", "12", "2026");

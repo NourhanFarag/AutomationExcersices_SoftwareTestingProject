@@ -4,6 +4,6 @@
     "contactUsFormEmail": "nourhan@example.com",
     "contactUsFormSubject": "Automation Inquiry",
     "contactUsFormMsg": "This is a test message from automation framework.",
-    "contactUsFormFilePath": "D:\\Software Testing\\AutomoationExcersices_TestingProject\\src\\test\\resources\\data\\sampleImage.jpg"
+    "contactUsFormFilePath": "D:\\Software Testing\\AutomationExcersices_TestingProject\\src\\test\\resources\\data\\sampleImage.jpg"
   }
 ]

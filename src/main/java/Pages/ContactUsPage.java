@@ -10,6 +10,10 @@ import SeleniumFramework.SeleniumHelper;
 public class ContactUsPage {
     private final WebDriver driver;
     private final SeleniumHelper helper; 
+    
+    // ===============================
+    // Locators
+    // ===============================
     private final By getInTouchHeader = By.xpath("//h2[contains(text(),'Get In Touch')]");
     private final By nameField = By.name("name");
     private final By emailField = By.name("email");
@@ -25,6 +29,10 @@ public class ContactUsPage {
         this.helper = helper;
     }
     
+    // ===============================
+    // Actions
+    // ===============================
+
     public String isGetInTouchVisible() {
         return helper.getText(getInTouchHeader);
     }

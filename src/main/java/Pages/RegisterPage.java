@@ -10,7 +10,10 @@ public class RegisterPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
 
-    // -------- Locators --------
+    // ===============================
+    // Locators
+    // ===============================    
+    
     private final By accountInfoHeader = By.xpath("//b[text()='Enter Account Information']");
     private final By titleMr = By.id("id_gender1");
     private final By titleMrs = By.id("id_gender2");
@@ -40,10 +43,17 @@ public class RegisterPage {
         this.helper = helper;
     }
 
+    // ===============================
+    // Page Verifications
+    // ===============================
     public String getEnterAccountInfoText() {
         return helper.getText(accountInfoHeader).trim();
     }
 
+    // ===============================
+    // Actions
+    // ===============================
+    
     public void selectTitle(String title) {
         if (title.equalsIgnoreCase("Mr")) {
             helper.selectRadioButton(titleMr);
@@ -90,7 +100,29 @@ public class RegisterPage {
         return new AccountCreatedPage(driver, helper);
     }
 
-    // -------- Combined register method --------
+    // ===============================
+    // Combined Registration Flow
+    // ===============================
+    /**
+     * Complete registration in a single method.
+     * Fills title, password, DOB, personal details and submits the form.
+     * @param title
+     * @param password
+     * @param day
+     * @param month
+     * @param year
+     * @param fname
+     * @param lname
+     * @param company
+     * @param address1
+     * @param address2
+     * @param country
+     * @param state
+     * @param city
+     * @param zipcode
+     * @param mobile
+     * @return 
+     */   
     public AccountCreatedPage registerNewUser(String title, String password,
                                               String day, String month, String year,
                                               String fname, String lname, String company,

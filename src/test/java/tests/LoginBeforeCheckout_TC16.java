@@ -59,7 +59,7 @@ public class LoginBeforeCheckout_TC16 extends BaseTest{
 
         // Step 13: Enter description and place order
         checkoutPage.enterComment("Please deliver between 9AM-5PM");
-        PaymentPage paymentPage = checkoutPage.clickPlaceOrder();
+        PaymentPage paymentPage = (PaymentPage) checkoutPage.clickPlaceOrder();
 
         // Step 14: Enter payment details
         paymentPage.enterPaymentDetails("Nourhan Farag", "57186825581", "123", "12", "2026");

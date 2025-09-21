@@ -4,7 +4,7 @@ import SeleniumFramework.SeleniumHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 /**
- *
+ * OrderConfirmationPage represents the order success page after payment.
  * @author Nourhan Farag
  */
 public class OrderConfirmationPage {

@@ -7,82 +7,56 @@
     
     <test name="AutomationExerciseTests">
         <classes>
-            <!-- Test Case 1: Register User -->
             <class name="tests.RegisterUser_TC1"/>
             
-            <!-- Test Case 2: Login with correct credentials -->
             <class name="tests.LoginUser_TC2"/>
             
-            <!-- Test Case 3: Login with incorrect credentials -->
             <class name="tests.LoginUserInvalid_TC3"/>
             
-            <!-- Test Case 4: Logout User -->
             <class name="tests.LogoutUser_TC4"/>
             
-            <!-- Test Case 5: Register User with existing email -->
             <class name="tests.RegisterUserExistingEmail_TC5"/>
             
-            <!-- Test Case 6: Contact Us Form -->
             <class name="tests.ContactUs_TC6"/>
             
-            <!-- Test Case 7: Verify Test Case Page -->
             <class name="tests.TestCases_TC7"/>
             
-            <!-- Test Case 8: Verify Products Page -->
-            <class name="tests.ProductsPage_TC8"/>
+            <class name="tests.VerifyProducts_TC8"/>
             
-            <!-- Test Case 9: View Product Details -->
-            <class name="tests.ViewProductDetails_TC9"/>
+            <class name="tests.SearchProduct_TC9"/>
             
-            <!-- Test Case 10: Add to Cart -->
-            <class name="tests.AddToCart_TC10"/>
+            <class name="tests.VerifySubscriptionHome_TC10"/>
             
-            <!-- Test Case 11: Cart Page Verification -->
-            <class name="tests.CartPageVerification_TC11"/>
+            <class name="tests.VerifySubscriptionCart_TC11"/>
             
-            <!-- Test Case 12: Remove from Cart -->
-            <class name="tests.RemoveFromCart_TC12"/>
+            <class name="tests.AddProducts_TC12"/>
             
-            <!-- Test Case 13: Place Order Without Login -->
-            <class name="tests.PlaceOrderWithoutLogin_TC13"/>
+            <class name="tests.VerifyProductQuantity_TC13"/>
             
-            <!-- Test Case 14: Place Order With Login -->
-            <class name="tests.PlaceOrderWithLogin_TC14"/>
+            <class name="tests.RegisterWhileCheckout_TC14"/>
             
-            <!-- Test Case 15: Review Order Before Payment -->
-            <class name="tests.ReviewOrder_TC15"/>
+            <class name="tests.RegisterBeforeCheckout_TC15"/>
             
-            <!-- Test Case 16: Payment and Confirmation -->
-            <class name="tests.Payment_TC16"/>
+            <class name="tests.LoginBeforeCheckout_TC16"/>
             
-            <!-- Test Case 17: Verify Order Success -->
-            <class name="tests.OrderSuccess_TC17"/>
+            <class name="tests.RemoveProductsFromCart_TC17"/>
             
-            <!-- Test Case 18: Delete Account -->
-            <class name="tests.DeleteAccount_TC18"/>
+            <class name="tests.ViewCategoryProducts_TC18"/>
             
-            <!-- Test Case 19: Verify Logged In As -->
-            <class name="tests.VerifyLoggedInAs_TC19"/>
+            <class name="tests.ViewBrandProducts_TC19"/>
             
-            <!-- Test Case 20: Verify Recommended Items -->
-            <class name="tests.RecommendedItems_TC20"/>
+            <class name="tests.SearchProductsVerifyCartAfterLogin_TC20"/>
             
-            <!-- Test Case 21: Scroll Down to Subscription -->
-            <class name="tests.ScrollDownSubscription_TC21"/>
+            <class name="tests.AddReviewOnProduct_TC21"/>
             
-            <!-- Test Case 22: Verify Address Details in Checkout -->
-            <class name="tests.VerifyAddressDetailsCheckout_TC22"/>
+            <class name="tests.AddToCartFromRecommended_TC22"/>
             
-            <!-- Test Case 23: Verify Address Details with Title Handling -->
             <class name="tests.VerifyAddressDetailsCheckout_TC23"/>
             
-            <!-- Test Case 24: Download Invoice after Purchase -->
             <class name="tests.DownloadInvoiceAfterPurchase_TC24"/>
             
-            <!-- Test Case 25: Scroll Up using Arrow Button -->
             <class name="tests.VerifyScrollUpDown_TC25"/>
             
-            <!-- Test Case 26: Scroll Up without Arrow Button -->
             <class name="tests.ScrollUpWithoutArrow_TC26"/>
             
         </classes>

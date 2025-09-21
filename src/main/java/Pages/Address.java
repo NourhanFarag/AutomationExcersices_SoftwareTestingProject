@@ -1,7 +1,16 @@
 package Pages;
+
 import java.util.Objects;
 
+/**
+ * Address model to store user address information.
+ * @author Nourhan Farag
+ */
 public class Address {
+    
+    // ===============================
+    // Fields
+    // ===============================
     private final String fullName;
     private final String company;
     private final String address1;
@@ -12,6 +21,22 @@ public class Address {
     private final String zipcode;
     private final String mobile;
 
+    // ===============================
+    // Constructor
+    // ===============================
+    /**
+     * Constructor to initialize all address fields.
+     *
+     * @param fullName Full name of the person
+     * @param company Company name
+     * @param address1 Primary address
+     * @param address2 Secondary address
+     * @param city City
+     * @param state State
+     * @param country Country
+     * @param zipcode Postal/ZIP code
+     * @param mobile Mobile number
+     */
     public Address(String fullName, String company, String address1, String address2,
                    String city, String state, String country, String zipcode, String mobile) {
         this.fullName = fullName;
@@ -25,6 +50,10 @@ public class Address {
         this.mobile = mobile;
     }
 
+    // ===============================
+    // Getters
+    // ===============================
+    // Accessor methods for each field
     public String getFullName() { return fullName; }
     public String getCompany() { return company; }
     public String getAddress1() { return address1; }
@@ -35,6 +64,14 @@ public class Address {
     public String getZipcode() { return zipcode; }
     public String getMobile() { return mobile; }
 
+    // ===============================
+    // String Representation
+    // ===============================
+    /**
+     * Returns a formatted string of the full address information.
+     * Useful for logging or displaying addresses in tests.
+     * @return 
+     */
     @Override
     public String toString() {
         return String.format(
@@ -43,6 +80,15 @@ public class Address {
         );
     }
 
+    // ===============================
+    // Equality Methods
+    // ===============================
+    /**
+     * Checks if two Address objects are equal by comparing all key fields.
+     * Mobile and fullName are intentionally excluded from equality check
+     * because addresses are usually compared based on location, not name/phone.
+     * @param o
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,6 +103,11 @@ public class Address {
                Objects.equals(zipcode, address.zipcode);
     }
 
+    /**
+     * Generates hash code based on key address fields.
+     * Ensures consistency with equals() for collections like HashMap.
+     * @return 
+     */
     @Override
     public int hashCode() {
         return Objects.hash(company, address1, address2,

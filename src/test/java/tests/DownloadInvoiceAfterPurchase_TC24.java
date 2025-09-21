@@ -2,13 +2,14 @@ package tests;
 
 import Pages.*;
 import base.BaseTest;
+import java.io.FileNotFoundException;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 public class DownloadInvoiceAfterPurchase_TC24 extends BaseTest {
 
     @Test
-    public void downloadInvoiceAfterPurchase() {
+    public void downloadInvoiceAfterPurchase() throws FileNotFoundException {
         SoftAssert softAssert = new SoftAssert();
         HomePage homePage = new HomePage(driver, helper);
 
@@ -16,38 +17,39 @@ public class DownloadInvoiceAfterPurchase_TC24 extends BaseTest {
         softAssert.assertTrue(homePage.isHomePageVisible(), "Home page is not visible!");
 
         // Step 4: Add products to cart
-        ProductsPage productsPage = homePage.clickProducts();
+        homePage.clickProducts();
+        ProductsPage productsPage = new ProductsPage(driver, helper);
         productsPage.addFirstProductToCart();
-        productsPage.clickViewCart();
+        productsPage.clickContinueShopping();
+        
+        // Step 5: Click 'Cart'
+        homePage.clickCart();
 
         // Step 6: Verify cart page
         CartPage cartPage = new CartPage(driver, helper);
         softAssert.assertTrue(cartPage.isCartPageVisible(), "Cart page not displayed!");
 
         // Step 7: Proceed to Checkout
-        cartPage.clickProceedToCheckout();
+        CheckoutPage checkoutPage = cartPage.clickProceedToCheckout();
 
         // Step 8: Click 'Register / Login'
-        LoginPage loginPage = homePage.clickSignupLogin();
-        softAssert.assertEquals(loginPage.getNewUserSignupText(), "New User Signup!");
+        LoginPage loginPage = cartPage.clickRegisterLogin();
 
         // Step 9: Fill details and create account
-        String email = "nourhan" + System.currentTimeMillis() + "@mail.com";
-        loginPage.enterSignupName("Nourhan");
-        loginPage.enterSignupEmail(email);
-        loginPage.clickSignupButton();
+        String randomEmail = "nourhan" + System.currentTimeMillis() + "@mail.com";
+        RegisterPage registerPage = loginPage.enterSignupDetails("Nourhan", randomEmail);
 
-        RegisterPage registerPage = new RegisterPage(driver, helper);
+        softAssert.assertEquals(registerPage.getEnterAccountInfoText(), "ENTER ACCOUNT INFORMATION", "Account Info header mismatch!");
+
         AccountCreatedPage accountCreatedPage = registerPage.registerNewUser(
-                "Mrs", "test123", "15", "May", "2000",
+                "Mrs", "123456", "10", "May", "1999",
                 "Nourhan", "Farag", "TechCorp",
-                "123 Street", "Apt 5", "Canada",
-                "Ontario", "Toronto", "A1B2C3", "1234567890"
+                "123 Test St", "Apt 4", "Canada",
+                "Ontario", "Toronto", "M5A1A1", "1234567890"
         );
 
         // Step 10: Verify account created and click continue
-        softAssert.assertEquals(accountCreatedPage.getAccountCreatedText(),
-                "ACCOUNT CREATED!", "Account created text mismatch!");
+        softAssert.assertEquals(accountCreatedPage.getAccountCreatedText(), "ACCOUNT CREATED!", "Account created text mismatch!");
         accountCreatedPage.clickContinue();
 
         // Step 11: Verify logged in
@@ -55,42 +57,36 @@ public class DownloadInvoiceAfterPurchase_TC24 extends BaseTest {
 
         // Step 12: Click 'Cart' button
         homePage.clickCart();
-        softAssert.assertTrue(cartPage.isCartPageVisible(), "Cart page not displayed!");
 
         // Step 13: Proceed to Checkout
         cartPage.clickProceedToCheckout();
+        softAssert.assertTrue(cartPage.isAddressDetailsVisible(), "Address Details not visible");
+        softAssert.assertTrue(cartPage.isReviewOrderVisible(), "Review Your Order section not visible");
 
-        // Step 14: Verify Address Details and Review Your Order
-        softAssert.assertTrue(cartPage.isAddressDetailsVisible(), "Address details not visible!");
-        softAssert.assertTrue(cartPage.isReviewOrderVisible(), "Review your order section not visible!");
-
-        // Step 15: Enter comment and place order
+        // Step 14: Enter comment and place order
         cartPage.enterComment("Please deliver between 9 AM - 5 PM.");
-        PaymentPage paymentPage = cartPage.clickPlaceOrder();
+        PaymentPage paymentPage = checkoutPage.clickPlaceOrder();
 
-        // Step 16: Enter payment details
-        paymentPage.enterPaymentDetails(
-                "Nourhan Farag", "986689626", "123", "12", "2025"
-        );
+        // Step 15: Enter payment details
+        paymentPage.enterPaymentDetails("Nourhan Farag", "986689626", "123", "12", "2025");
+        OrderConfirmationPage orderConfirmationPage = paymentPage.clickPayAndConfirm();
 
-        // Step 17: Pay and confirm order
-        paymentPage.clickPayAndConfirm();
-
-        // Step 18: Verify order success message
-        softAssert.assertEquals(paymentPage.getOrderSuccessMessage(),
-                "Congratulations! Your order has been confirmed!", "Order success message mismatch!");
-
-        // Step 19: Download invoice and verify download
+        // Step 16: Verify order success message
+        softAssert.assertTrue(orderConfirmationPage.isOrderSuccessMessageVisible(), "Order success message not displayed");
+        softAssert.assertTrue(orderConfirmationPage.getOrderSuccessMessageText()
+                .contains("Congratulations! Your order has been confirmed!"));
+        
+        // Step 17: Download invoice and verify download
         paymentPage.downloadInvoice();
         softAssert.assertTrue(paymentPage.isInvoiceDownloaded(), "Invoice was not downloaded!");
 
-        // Step 20: Click 'Continue'
+        // Step 18: Click 'Continue'
         paymentPage.clickContinue();
 
-        // Step 21: Delete account
+        // Step 19: Delete account
         homePage.clickDeleteAccount();
 
-        // Step 22: Verify account deleted
+        // Step 20: Verify account deleted
         AccountDeletedPage accountDeletedPage = new AccountDeletedPage(driver, helper);
         softAssert.assertEquals(accountDeletedPage.getAccountDeletedText(),
                 "ACCOUNT DELETED!", "Account deleted text mismatch!");

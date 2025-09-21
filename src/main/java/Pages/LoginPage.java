@@ -10,6 +10,10 @@ import org.openqa.selenium.*;
 public class LoginPage {
     private final WebDriver driver;
     private final SeleniumHelper helper;
+    
+    // ===============================
+    // Locators
+    // ===============================
     private final By newUserSignupText = By.xpath("//h2[text()='New User Signup!']");
     private final By nameField = By.xpath("//input[@data-qa='signup-name']");
     private final By emailField = By.xpath("//input[@data-qa='signup-email']");
@@ -19,7 +23,6 @@ public class LoginPage {
     private final By loginPasswordField = By.cssSelector("input[data-qa='login-password']");
     private final By loginButton = By.cssSelector("button[data-qa='login-button']");
     private final By loginErrorMessage = By.xpath("//p[@style='color: red;']");
-
     private final By newUserSignupHeader = By.xpath("//h2[text()='New User Signup!']");
     private final By signupNameField = By.name("name");
     private final By signupEmailField = By.xpath("//input[@data-qa='signup-email']");
@@ -31,19 +34,40 @@ public class LoginPage {
         this.helper = helper;
     }
     
+    // ===============================
+    // Page Verifications
+    // ===============================
+    
     public String getNewUserSignupText() {
         return helper.getText(newUserSignupText).trim();
     }
 
+    public String getLoginHeaderText() {
+        return helper.getText(loginToAccountHeader).trim();
+    }
+
+    public String getLoginErrorMessage() {
+        return helper.getText(loginErrorMessage).trim();
+    }
+
+    public String getSignupErrorText() {
+        return helper.getText(signupError).trim();
+    }
+
+    
+    public String getNewUserSignupHeaderText() {
+        return helper.getText(newUserSignupHeader).trim();
+    }
+    
+    // ===============================
+    // Actions
+    // ===============================
+    
     public RegisterPage enterSignupDetails(String name, String email) {
         helper.sendKeys(nameField, name);
         helper.sendKeys(emailField, email);
         helper.click(signupBtn);
         return new RegisterPage(driver, helper);
-    }
-    
-    public String getLoginHeaderText() {
-        return helper.getText(loginToAccountHeader).trim();
     }
     
     public void enterLoginEmail(String email) {
@@ -58,14 +82,6 @@ public class LoginPage {
         helper.click(loginButton);
     }
     
-    public String getLoginErrorMessage() {
-        return helper.getText(loginErrorMessage).trim();
-    }
-    
-    public String getNewUserSignupHeaderText() {
-        return helper.getText(newUserSignupHeader).trim();
-    }
-
     public void enterSignupName(String name) {
         helper.sendKeys(signupNameField, name);
     }
@@ -76,9 +92,5 @@ public class LoginPage {
 
     public void clickSignupButton() {
         helper.click(signupButton);
-    }
-
-    public String getSignupErrorText() {
-        return helper.getText(signupError).trim();
     }
 }
