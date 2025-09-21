@@ -66,25 +66,24 @@ Each test case is implemented as a **separate TestNG class** using page methods 
 ---
 
 ## 4. Project Structure
-````
-AutomationExercises_SoftwareTestingProject/
-│
-├─ src/
-│  ├─ main/
-│  │  ├─ java/
-│  │  │  ├─ Pages/              # Page Object classes
-│  │  │  └─ SeleniumFramework/  # Helper utilities
-│  │
-│  └─ test/
-│     └─ java/
-│        └─ tests/              # TestNG test classes
-│
-├─ testData/                     # JSON test data files
-├─ pom.xml                        # Maven dependencies
-├─ testng.xml                     # TestNG suite configuration
-└─ README.md                      # Project documentation
-```
-
+    ```
+    AutomationExercises_SoftwareTestingProject/
+    │
+    ├─ src/
+    │  ├─ main/
+    │  │  ├─ java/
+    │  │  │  ├─ Pages/              # Page Object classes
+    │  │  │  └─ SeleniumFramework/  # Helper utilities
+    │  │
+    │  └─ test/
+    │     └─ java/
+    │        └─ tests/              # TestNG test classes
+    │
+    ├─ testData/                     # JSON test data files
+    ├─ pom.xml                        # Maven dependencies
+    ├─ testng.xml                     # TestNG suite configuration
+    └─ README.md                      # Project documentation
+    ```
 
 - **Pages/**: Contains all page objects with locators and methods.  
 - **SeleniumFramework/**: Contains helper classes like `SeleniumHelper` for reusable actions.  
